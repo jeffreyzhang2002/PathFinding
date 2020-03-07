@@ -14,21 +14,21 @@ public class Main extends PApplet
         PApplet.main("Main");
     }
 
-    Field field = new Field(9,10);
+    Field field = new Field(20,20);
     DRobot robot =new DRobot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
     ArrayList<Barrier> barriers = new ArrayList<>();
-    Barrier ABarrier = new Barrier(field,new DiscreteCoordinate(5,field.getCols()-2));
+    Barrier ABarrier;
 
 
     public void settings()
     {
         size(600,600);
         field.initRendering(this,new DiscreteCoordinate(0,0),width,height);
-        robot.initPathFinder(new DiscreteCoordinate(8,9));
+        robot.initPathFinder(new DiscreteCoordinate(19,19));
         robot.placeSelfInGrid();
-        for(int y=0; y<field.getCols()-2; y++)
+        for(int y=0; y<60; y++)
         {
-            barriers.add(new Barrier(field,new DiscreteCoordinate(5,y)));
+            barriers.add(new Barrier(field,new DiscreteCoordinate((int)random(0,field.getRows()-1),(int)random(0,field.getRows()-1))));
             barriers.get(y).placeSelfInGrid();
         }
         System.out.println("settings completed");
@@ -54,7 +54,7 @@ public class Main extends PApplet
 
     public void keyPressed()
     {
-        //barriers.get(0).removeSelfFromGrid();
+        ABarrier = new Barrier(field,(DiscreteCoordinate) robot.getNextCoordinates().toArray()[0]);
         ABarrier.placeSelfInGrid();
         field.render();
         field.renderActor();

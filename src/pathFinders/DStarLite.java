@@ -144,7 +144,7 @@ public class DStarLite extends PathFinder
 
     public ArrayList<DiscreteCoordinate> dynamicReplan(DiscreteCoordinate currentPos, boolean containCorners)
     {
-        //super.setStart(currentPos);
+
         State currentState = openList.get(currentPos);
         km = km + heuristic(super.getEnd(), super.getStart());
         HashSet<DiscreteCoordinate> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
@@ -159,6 +159,7 @@ public class DStarLite extends PathFinder
                 updateVertex(openList.get(c),containCorners);
         }
         computeShortestPath(containCorners);
+        super.setStart(currentPos);
         ArrayList<DiscreteCoordinate> tmp = rebuildPath(containCorners);
         return tmp;
     }
