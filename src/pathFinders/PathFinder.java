@@ -2,6 +2,8 @@ package pathFinders;
 
 import grid.Field;
 import math.DiscreteCoordinate;
+
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -23,13 +25,20 @@ public abstract class PathFinder
         this.end = end;
     }
 
-    public final boolean generatePath(boolean containCorners)
+    public PathFinder(PathFinder other)
     {
-        path = genPath(containCorners);
-        return path != null;
+        this.start = new DiscreteCoordinate(other.getStart());
+        this.end = new DiscreteCoordinate(other.getEnd());
+        this.field = other.getField();
     }
 
     public abstract ArrayList<DiscreteCoordinate> genPath(boolean containCorners);
+
+    public ArrayList<DiscreteCoordinate> dynamicReplan(DiscreteCoordinate currentPosition, boolean containCorners)
+    {
+       path = genPath(containCorners);
+       return path;
+    }
 
     public final void setStart(DiscreteCoordinate start)
     { this.start = start; }
@@ -48,6 +57,17 @@ public abstract class PathFinder
 
     public final ArrayList<DiscreteCoordinate> getPath()
     { return path; }
+
+    public final void mergePath(int index, ArrayList<DiscreteCoordinate> otherPath)
+    {
+        ArrayList<DiscreteCoordinate> newPath = new ArrayList<>();
+        for(int i=0; i<index; i++)
+        {
+            newPath.add(path.get(i));
+        }
+        newPath.addAll(otherPath);
+        path = newPath;
+    }
 
     public final int getPathLength()
     { return path.size(); }

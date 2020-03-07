@@ -2,181 +2,188 @@ package pathFinders;
 
 import grid.Field;
 import math.DiscreteCoordinate;
-import org.omg.PortableInterceptor.DISCARDING;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 public class DStarLite extends PathFinder
 {
-    HashMap<DiscreteCoordinate,double[]> score;  // Score (RHS,G)
-    PriorityQueue<Group<DiscreteCoordinate, Keys>> openGroup;
+    private DiscreteCoordinate start;
+    private HashMap<DiscreteCoordinate,State> openList;
+    private PriorityQueue<State> openQueue;
+    private double km = 0;
 
     public DStarLite(Field field)
-    {
-        super(field);
-    }
+    { super(field); }
 
     public DStarLite(Field field, DiscreteCoordinate start, DiscreteCoordinate end)
-    {
-        super(field,start,end);
-    }
+    { super(field,start,end); }
 
-    public ArrayList<DiscreteCoordinate> genPath (boolean containCorners)
+    public ArrayList<DiscreteCoordinate> genPath(boolean containCorners)
     {
-        score = new HashMap<>();
-        openGroup = new PriorityQueue<>();
         init();
-        while(openGroup.peek().getValue().primaryKey < calculateKeys(super.getStart())[0] || score.get(super.getStart())[0] != score.get(super.getStart())[1] )
-        {
-            Group<DiscreteCoordinate,Keys> top = openGroup.poll();
-            double[] currentScore = score.get(top.getKey());
-
-            HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(top.getKey(), containCorners);
-
-            if(currentScore[1] > currentScore[0])
-            {
-                currentScore[1] = currentScore[0];
-                for(DiscreteCoordinate current: neighbors)
-                    updateVertex(current, containCorners, currentScore);
-            } else {
-                currentScore[1] = Double.MAX_VALUE;
-                for(DiscreteCoordinate current: neighbors)
-                    if (openGroup.contains(discreteCoordinateConverter(current)))
-                        updateVertex(current, containCorners, currentScore);
-
-            }
-        }
+        computeShortestPath(containCorners);
         return rebuildPath(containCorners);
     }
 
-    public void updateVertex(DiscreteCoordinate current, boolean containCorners, double[] currentScore)
+    public double heuristic(DiscreteCoordinate start, DiscreteCoordinate end)
+    { return start.distance(end); }
+
+    public double calculatePrimaryKey(State currentState)
+    { return Math.min(currentState.getG(), currentState.getRHS() + heuristic(super.getStart(),currentState.getCoordinate()) + km); }
+
+    public double calculateSecondaryKey(State currentState)
+    { return Math.min(currentState.getG(), currentState.getRHS()); }
+
+    public void init()
     {
-        if (current != super.getEnd())
+        openQueue = new PriorityQueue<>();
+        openList = new HashMap<>();
+        km = 0;
+
+        for(int i=0; i < super.getField().getRows(); i++)
         {
-            // get all neighbors of the current value
-            HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(current, containCorners);
-
-
-            // find the value with least connection cost + g cost
-            double min = Double.MAX_VALUE;
-            for (DiscreteCoordinate neighbor : neighbors)
+            for(int j=0; j < super.getField().getCols(); j++)
             {
-                double sum = heuristic(current, neighbor) + score.get(neighbor)[1];
-                if (sum < min)
-                    min = sum;
+                DiscreteCoordinate currentCoordinate = new DiscreteCoordinate(i,j);
+                openList.put(currentCoordinate, new State(currentCoordinate));
             }
-
-            // set the RHS value to the min
-            currentScore[0] = min;
-            System.out.println(currentScore[0]);
         }
-
-        openGroup.remove(discreteCoordinateConverter(current));
-
-        if (currentScore[1] != currentScore[0])
-            openGroup.add(new Group(current, new Keys(calculateKeys(current))));
+        State endState = openList.get(super.getEnd());
+        endState.setRHS(0.0);
+        endState.setKeys(calculatePrimaryKey(endState), calculateSecondaryKey(endState));
+        openQueue.add(endState);
     }
 
-    private Group<DiscreteCoordinate, Keys> discreteCoordinateConverter(DiscreteCoordinate c)
+    public void updateVertex(State currentState, boolean containCorners)
     {
-        return new Group<DiscreteCoordinate, Keys>(c,null);
-    }
-
-    private void init()
-    {
-        //set all position in the field with a max value
-        for(int i = 0; i < super.getField().getRows(); i++)
-            for(int j = 0; j < super.getField().getCols(); j++)
-                score.put(new DiscreteCoordinate(i, j), new double[] {Double.MAX_VALUE, Double.MAX_VALUE });
-
-        // set the RHS value of the End to 0
-        score.get(super.getEnd())[0] = 0;
-
-        // Add End to the open Group and calculate is keys
-        openGroup.add(new Group(super.getEnd(), new Keys(calculateKeys(super.getEnd()))));
-    }
-
-    private double[] calculateKeys(DiscreteCoordinate current)
-    {
-        //calculate the Keys
-        double[] currentScore = score.get(current);
-        return new double[]{Math.min(currentScore[0], currentScore[1]) + heuristic(super.getStart(), current), Math.min(currentScore[0],currentScore[1])};
-    }
-
-    private ArrayList<DiscreteCoordinate> rebuildPath(boolean containCorners)
-    {
-
-        ArrayList<DiscreteCoordinate> path = new ArrayList<>();
-        DiscreteCoordinate current = super.getStart();
-
-        if(current == null)
-            System.out.println("start == null");
-
-        while(current != super.getEnd()) {
-            path.add(current);
-            HashSet<DiscreteCoordinate> neighbors = super.getField().getNeighborCoordinates(current, containCorners);
-            double min = Double.MAX_VALUE;
-            DiscreteCoordinate minCoordinate = null;
-            for (DiscreteCoordinate n : neighbors)
+        if(!currentState.getCoordinate().equals(super.getEnd()))
+        {
+            double minSuccessorValue = Double.POSITIVE_INFINITY;
+            HashSet<DiscreteCoordinate> successors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+            for(DiscreteCoordinate s : successors)
             {
-                double t = score.get(n)[0];
-                System.out.println(t);
-                if (t < min) {
-                    min = t;
-                    minCoordinate = n;
+                double successorValue = heuristic(currentState.getCoordinate(), s) + openList.get(s).getG();
+                if(successorValue < minSuccessorValue)
+                    minSuccessorValue = successorValue;
+            }
+             currentState.setRHS(minSuccessorValue);
+        }
+        if(openQueue.contains(currentState))
+        {
+            openQueue.remove(currentState);
+        }
+        if(currentState.getG() != currentState.getRHS())
+        {
+            currentState.setKeys(calculatePrimaryKey(currentState), calculateSecondaryKey(currentState));
+            openQueue.add(currentState);
+        }
+    }
+
+    public void computeShortestPath(boolean containCorners)
+    {
+        State startState = openList.get(super.getStart());
+        while(!openQueue.isEmpty() && openQueue.peek().getPrimaryKey() < calculatePrimaryKey(startState) || startState.getRHS() != startState.getG())
+        {
+            State currentState = openQueue.poll();
+            double kOld = currentState.getPrimaryKey();
+            if(kOld < calculatePrimaryKey(currentState))
+            {
+                currentState.setKeys(calculatePrimaryKey(currentState), calculateSecondaryKey(currentState));
+                openQueue.add(currentState);
+            }
+            else if(currentState.getG() > currentState.getRHS())
+            {
+                currentState.setG(currentState.getRHS());
+                HashSet<DiscreteCoordinate> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+                for(DiscreteCoordinate c : predecessors)
+                {
+                   updateVertex(openList.get(c),containCorners);
                 }
             }
-            current = minCoordinate;
+            else
+            {
+                currentState.setG(Double.POSITIVE_INFINITY);
+                HashSet<DiscreteCoordinate> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+                for(DiscreteCoordinate c : predecessors)
+                {
+                    updateVertex(openList.get(c),containCorners);
+                }
+                updateVertex(currentState,containCorners);
+            }
         }
-        System.out.println("made it again");
+        display();
+    }
+
+    public ArrayList<DiscreteCoordinate> rebuildPath(boolean containCorners)
+    {
+        ArrayList<DiscreteCoordinate> path = new ArrayList<>();
+        DiscreteCoordinate current = super.getStart();
+        while(!current.equals(super.getEnd()))
+        {
+            path.add(current);
+            HashSet<DiscreteCoordinate> successor = super.getField().getNeighborCoordinates(current, containCorners);
+            double minSuccessorScore = Double.POSITIVE_INFINITY;
+            DiscreteCoordinate minSuccessor = null;
+            for (DiscreteCoordinate s : successor)
+            {
+                double successorScore = openList.get(s).getG();
+                if (successorScore < minSuccessorScore) {
+                    minSuccessorScore = successorScore;
+                    minSuccessor = s;
+                }
+            }
+            current = minSuccessor;
+        }
+        path.add(super.getEnd());
+
         return path;
     }
 
-    private double heuristic(DiscreteCoordinate a, DiscreteCoordinate b)
-    { return a.distance(b); }
-
-
-    private class Keys implements Comparable<Keys>
+    public ArrayList<DiscreteCoordinate> dynamicReplan(DiscreteCoordinate currentPos, boolean containCorners)
     {
-        private double primaryKey, secondaryKey;
+        //super.setStart(currentPos);
+        State currentState = openList.get(currentPos);
+        km = km + heuristic(super.getEnd(), super.getStart());
+        HashSet<DiscreteCoordinate> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
 
-        public Keys(double primaryKey, double secondaryKey)
+        for(DiscreteCoordinate b : blockedNeighbors)
         {
-            this.primaryKey = primaryKey;
-            this.secondaryKey = secondaryKey;
+            State blockedState = openList.get(b);
+            blockedState.setG(Double.POSITIVE_INFINITY);
+            blockedState.setRHS(Double.POSITIVE_INFINITY);
+            HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(b,containCorners);
+            for(DiscreteCoordinate c : neighbors)
+                updateVertex(openList.get(c),containCorners);
         }
+        computeShortestPath(containCorners);
+        ArrayList<DiscreteCoordinate> tmp = rebuildPath(containCorners);
+        return tmp;
+    }
 
-        public Keys(double[]keys)
+    private void display()
+    {
+        String s = "";
+        for(int i=0; i<super.getField().getRows(); i++)
         {
-            this.primaryKey = keys[0];
-            this.secondaryKey = keys[1];
+            for(int j=0; j<super.getField().getCols(); j++)
+            {
+                s += openList.get(new DiscreteCoordinate(i,j)) + " ";
+            }
+            s += "\n";
         }
+        System.out.println(s);
+    }
 
-        public double getPrimaryKey()
-        {
-            return primaryKey;
-        }
+    public void setkm(double km)
+    {
+        this.km = km;
+    }
 
-        public double getSecondaryKey()
-        {
-            return secondaryKey;
-        }
-
-        public double[] getKeys()
-        {
-            return new double[]{primaryKey,secondaryKey};
-        }
-
-        public int compareTo(Keys other)
-        {
-            Double otherKey = new Double(other.getPrimaryKey());
-            return otherKey.compareTo(primaryKey);
-        }
-
-        public String toString()
-        {
-            return "Primary Key: " + primaryKey + " Secondary Key:" + secondaryKey + "]";
-        }
+    public double getkm()
+    {
+        return km;
     }
 }
