@@ -14,7 +14,7 @@ public class Main extends PApplet
         PApplet.main("Main");
     }
 
-    Field field = new Field(20,20);
+    Field field = new Field(50,50);
     DRobot robot =new DRobot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
     ArrayList<Barrier> barriers = new ArrayList<>();
     Barrier ABarrier;
@@ -26,7 +26,7 @@ public class Main extends PApplet
         field.initRendering(this,new DiscreteCoordinate(0,0),width,height);
         robot.initPathFinder(new DiscreteCoordinate(19,19));
         robot.placeSelfInGrid();
-        for(int y=0; y<60; y++)
+        for(int y=0; y<100; y++)
         {
             barriers.add(new Barrier(field,new DiscreteCoordinate((int)random(0,field.getRows()-1),(int)random(0,field.getRows()-1))));
             barriers.get(y).placeSelfInGrid();

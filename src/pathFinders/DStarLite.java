@@ -2,12 +2,14 @@ package pathFinders;
 
 import grid.Field;
 import math.DiscreteCoordinate;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
+/**
+ * Path Finding class implementation of DStarLite
+ */
 public class DStarLite extends PathFinder
 {
     private DiscreteCoordinate start;
