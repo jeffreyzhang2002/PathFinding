@@ -1,17 +1,19 @@
 package pathFinders;
 
+import grid.BoundedGrid;
 import grid.Field;
 import math.DiscreteCoordinate;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
+/**
+ * Implementation of DStarLite Path Finding
+ * @author Jeffrey
+ */
 public class DStarLite extends PathFinder
 {
-    private DiscreteCoordinate start;
-    private HashMap<DiscreteCoordinate,State> openList;
+    private BoundedGrid<State> openList;
     private PriorityQueue<State> openQueue;
     private double km = 0;
 
@@ -34,13 +36,10 @@ public class DStarLite extends PathFinder
     public double calculatePrimaryKey(State currentState)
     { return Math.min(currentState.getG(), currentState.getRHS() + heuristic(super.getStart(),currentState.getCoordinate()) + km); }
 
-    public double calculateSecondaryKey(State currentState)
-    { return Math.min(currentState.getG(), currentState.getRHS()); }
-
     public void init()
     {
         openQueue = new PriorityQueue<>();
-        openList = new HashMap<>();
+        openList = new BoundedGrid<>(super.getField().getRows(),super.getField().getCols());
         km = 0;
 
         for(int i=0; i < super.getField().getRows(); i++)
@@ -48,12 +47,12 @@ public class DStarLite extends PathFinder
             for(int j=0; j < super.getField().getCols(); j++)
             {
                 DiscreteCoordinate currentCoordinate = new DiscreteCoordinate(i,j);
-                openList.put(currentCoordinate, new State(currentCoordinate));
+                openList.set(currentCoordinate, new State(currentCoordinate));
             }
         }
         State endState = openList.get(super.getEnd());
         endState.setRHS(0.0);
-        endState.setKeys(calculatePrimaryKey(endState), calculateSecondaryKey(endState));
+        endState.setPrimaryKey(calculatePrimaryKey(endState));
         openQueue.add(endState);
     }
 
@@ -77,7 +76,7 @@ public class DStarLite extends PathFinder
         }
         if(currentState.getG() != currentState.getRHS())
         {
-            currentState.setKeys(calculatePrimaryKey(currentState), calculateSecondaryKey(currentState));
+            currentState.setPrimaryKey(calculatePrimaryKey(currentState));
             openQueue.add(currentState);
         }
     }
@@ -91,7 +90,7 @@ public class DStarLite extends PathFinder
             double kOld = currentState.getPrimaryKey();
             if(kOld < calculatePrimaryKey(currentState))
             {
-                currentState.setKeys(calculatePrimaryKey(currentState), calculateSecondaryKey(currentState));
+                currentState.setPrimaryKey(calculatePrimaryKey(currentState));
                 openQueue.add(currentState);
             }
             else if(currentState.getG() > currentState.getRHS())
@@ -114,7 +113,6 @@ public class DStarLite extends PathFinder
                 updateVertex(currentState,containCorners);
             }
         }
-        display();
     }
 
     public ArrayList<DiscreteCoordinate> rebuildPath(boolean containCorners)
@@ -144,8 +142,6 @@ public class DStarLite extends PathFinder
 
     public ArrayList<DiscreteCoordinate> dynamicReplan(DiscreteCoordinate currentPos, boolean containCorners)
     {
-
-        State currentState = openList.get(currentPos);
         km = km + heuristic(super.getEnd(), super.getStart());
         HashSet<DiscreteCoordinate> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
 
@@ -164,7 +160,7 @@ public class DStarLite extends PathFinder
         return tmp;
     }
 
-    private void display()
+    public void display()
     {
         String s = "";
         for(int i=0; i<super.getField().getRows(); i++)
@@ -179,12 +175,8 @@ public class DStarLite extends PathFinder
     }
 
     public void setkm(double km)
-    {
-        this.km = km;
-    }
+    { this.km = km; }
 
     public double getkm()
-    {
-        return km;
-    }
+    { return km; }
 }

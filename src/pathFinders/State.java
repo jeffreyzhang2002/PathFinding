@@ -2,14 +2,12 @@ package pathFinders;
 
 import math.DiscreteCoordinate;
 
-import java.math.BigDecimal;
-
 public class State implements Comparable<State>
 {
     private DiscreteCoordinate coordinate;
     private double RHS = Double.POSITIVE_INFINITY;
     private double G = Double.POSITIVE_INFINITY;
-    private double primaryKey, secondaryKey;
+    private double primaryKey;
 
     public State(DiscreteCoordinate coordinate)
     {
@@ -25,9 +23,6 @@ public class State implements Comparable<State>
     public double getPrimaryKey()
     { return primaryKey; }
 
-    public double getSecondaryKey()
-    { return secondaryKey; }
-
     public DiscreteCoordinate getCoordinate()
     {
         return coordinate;
@@ -41,15 +36,6 @@ public class State implements Comparable<State>
 
     public void setPrimaryKey(double primaryKey)
     { this.primaryKey = primaryKey; }
-
-    public void setSecondaryKey(double secondaryKey)
-    { this.secondaryKey = secondaryKey; }
-
-    public void setKeys(double primaryKey, double secondaryKey)
-    {
-        this.primaryKey = primaryKey;
-        this.secondaryKey = secondaryKey;
-    }
 
     public int compareTo(State other)
     {

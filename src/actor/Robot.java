@@ -1,12 +1,9 @@
 package actor;
 
 import grid.Field;
-import math.Coordinate;
-import math.DiscreteCoordinate;
-import math.RGB;
+import math.*;
 import pathFinders.PathFinder;
 import processing.core.PApplet;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -31,9 +28,7 @@ public class Robot extends Actor
     }
 
     public void generatePath()
-    {
-        path = pathFinder.genPath(containCorners);
-    }
+    { path = pathFinder.genPath(containCorners); }
 
     public HashSet<DiscreteCoordinate> getNextCoordinates()
     {
@@ -59,23 +54,19 @@ public class Robot extends Actor
 
         if(!super.getField().isEmptyPosition(current))
         {
-            System.out.println("someone blocked me");
-            if(doDynamicReplanning) {
-                pathFinder.setStart(super.getPosition());
-                ArrayList<DiscreteCoordinate> newPath = pathFinder.genPath(containCorners);
-                if(newPath == null) {
-                    path = null;
-                    return super.getPosition();
-                }
-                for(int i = index; i > 0; i--)
-                {
-                    newPath.add(0, path.get(i));
-                }
-                path = newPath;
-            }
-            else
+            pathFinder.setStart(super.getPosition());
+            ArrayList<DiscreteCoordinate> newPath = pathFinder.genPath(containCorners);
+            if(newPath == null) {
+                path = null;
                 return super.getPosition();
+            }
 
+            for(int i = index; i > 0; i--)
+                newPath.add(0, path.get(i));
+
+            path = newPath;
+
+            return super.getPosition();
         }
         index++;
         return current;
@@ -88,18 +79,14 @@ public class Robot extends Actor
     }
 
     public Actor droppedActor()
-    {
-        return null;
-    }
+    { return null; }
 
     public ArrayList<DiscreteCoordinate> getPath()
-    {
-        return path;
-    }
+    { return path; }
 
     public void colorPath()
     {
         for(DiscreteCoordinate c: path)
-            super.getField().getTileDisplayerGrid().set(c, new RGB(255,255,0));
+            super.getField().getTileColorTracker().set(c, new RGB(255,255,0));
     }
 }
