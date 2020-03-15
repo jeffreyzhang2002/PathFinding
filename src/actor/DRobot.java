@@ -46,6 +46,9 @@ public class DRobot extends Actor
         if(index >= path.size())
             index = 0;
 
+        if(Math.random()*100 < 20)
+            temp.addAll(super.getField().getEmptyNeighboringCoordinates(path.get(index),true));
+
         temp.add(path.get(index));
         return temp;
     }
@@ -55,8 +58,15 @@ public class DRobot extends Actor
         if(coordinateList == null || coordinateList.isEmpty())
             return super.getPosition();
 
-        DiscreteCoordinate current = (DiscreteCoordinate) coordinateList.toArray()[0];
+        DiscreteCoordinate current = (DiscreteCoordinate) coordinateList.toArray()[(int)(Math.random()*(coordinateList.size() - 1))];
 
+        if(!current.equals(path.get(index)))
+        {
+            this.colorPath(path, new RGB(255,255,255));
+            path = pathFinder.dynamicReplan(super.getPosition(),containCorners);
+            this.colorPath(path, new RGB(255,255,0));
+            index = 0;
+        }
         if(!super.getField().isEmptyPosition(current))
         {
             this.colorPath(path, new RGB(255,255,255));
