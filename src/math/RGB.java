@@ -8,32 +8,49 @@ import java.util.Objects;
  * @version 1
  * @since 1/4/19
  */
-public class RGB
+public class RGB implements Cloneable
 {
-    private int r,g,b;
-    public final int maxValue = 255;
+    private int r, g, b;
+    public final int MAXVALUE = 255;
 
+    /**
+     * Creates an instance of RGB. Using the Red, Green and Blue value for a certain color
+     * @param r the r value
+     * @param g the g value
+     * @param b the b value
+     */
     public RGB(int r, int g, int b)
     { set(r,g,b); }
 
+    /**
+     * Creates an instance of RGB. This constructor creates a gray scale color as Red, Green and Blue are the same
+     * @param c
+     */
     public RGB(int c)
     { set(c,c,c); }
 
+    /**
+     * Creates an instance of RGB using another RGB
+     * @param rgb another instance of RGB
+     */
     public RGB(RGB rgb)
-    {
-        set(rgb.getR(),rgb.getG(),rgb.getB());
-    }
+    { set(rgb.getR(), rgb.getG(), rgb.getB()); }
 
-    public RGB()
-    { set(0,0, 0);}
-
+    /**
+     * Sets the R value of RGB
+     * @param r the R value
+     */
     public void setR(int r)
     {
         if(!isValid(r))
-        throw new IllegalArgumentException("r must be [0;255]");
+            throw new IllegalArgumentException("r must be [0;255]");
         this.r = r;
     }
 
+    /**
+     * Sets the G value of RGB
+     * @param g the G value
+     */
     public void setG(int g)
     {
         if(!isValid(g))
@@ -41,6 +58,10 @@ public class RGB
         this.g = g;
     }
 
+    /**
+     * Sets the B value of RGB
+     * @param b the B value
+     */
     public void setB(int b)
     {
         if(!isValid(b))
@@ -48,6 +69,12 @@ public class RGB
         this.b = b;
     }
 
+    /**
+     * Sets the RGB value to the given values
+     * @param r the R value
+     * @param g the G value
+     * @param b the B value
+     */
     public void set(int r, int g, int b)
     {
         setR(r);
@@ -55,37 +82,56 @@ public class RGB
         setB(b);
     }
 
+    /**
+     * Sets the RGB value to the given monochrome value. R,G and B are all set to C
+     * @param c
+     */
     public void set(int c)
     { set(c,c,c); }
 
+    /**
+     * Inverts the current color
+     */
     public void invert()
     {
-        r = maxValue - r;
-        g = maxValue - g;
-        b = maxValue - b;
+        r = MAXVALUE - r;
+        g = MAXVALUE - g;
+        b = MAXVALUE - b;
     }
 
+    /**
+     * Grey scale the current value
+     */
     public void greyScale()
-    {
-        int avg = (r + g + b)/3;
-        r = avg;
-        g = avg;
-        b = avg;
-    }
+    { set((r + g + b) /3); }
 
+    /**
+     * returns the R value
+     * @return the R value
+     */
     public int getR()
     { return r; }
 
+    /**
+     * returns the G value
+     * @return the G value
+     */
     public int getG()
     { return g; }
 
+    /**
+     * returns the B value
+     * @return the B value
+     */
     public int getB()
     { return b; }
 
+    /**
+     * return the RGB value as a 1D array with length 3
+     * @return int[] {R,G,B}
+     */
     public int[] get()
-    {
-        return new int[] {r,g,b};
-    }
+    { return new int[] {r,g,b}; }
 
     public boolean equals(Object obj)
     {
@@ -96,15 +142,26 @@ public class RGB
         return false;
     }
 
+    /**
+     * Checks if the RGB value is within bounds
+     * @param r the R value
+     * @param g the B value
+     * @param b the G value
+     * @return true if R,G and B are >= 0 and R,G and B are <= 255
+     */
     public boolean isValid(int r, int g, int b)
     { return isValid(r) && isValid(g) && isValid(b); }
 
+    /**
+     * Checks if the given between 0 and 255;
+     * @param c the current C value
+     * @return true or false
+     */
     private boolean isValid(int c)
-    {
-        return c <= maxValue && c >= 0;
-    }
+    { return c <= MAXVALUE && c >= 0; }
 
-    public int hashCode() { return 1; }
+    public int hashCode()
+    { return 1; }
 
     public String toString()
     { return "(" + r + "," + g + "," + b + ")"; }

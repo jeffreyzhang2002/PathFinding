@@ -1,8 +1,6 @@
 package grid;
 
-import math.Coordinate;
 import math.DiscreteCoordinate;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -40,41 +38,34 @@ public class ListedGrid<E> extends Grid<E>
     }
 
     public HashSet<DiscreteCoordinate> getOccupiedCoordinates()
-    {
-        return (HashSet<DiscreteCoordinate>) gridList.keySet();
-    }
+    { return (HashSet<DiscreteCoordinate>) gridList.keySet(); }
 
     public HashSet<E> getAllObjects()
-    {
-        HashSet<E> objects = new HashSet<>();
-        objects.addAll(gridList.values());
-        return objects;
-    }
+    { return new HashSet<>(gridList.values()); }
 
-    public HashSet<E> getNeighboringObjects(DiscreteCoordinate coordinate, boolean containCorners)
+    public HashSet<E> getNeighboringObjects(DiscreteCoordinate position, boolean containCorners)
     {
         HashSet<E> neighboringObjects = new HashSet<E>();
         for(DiscreteCoordinate c : gridList.keySet())
         {
-            if(c.getX() == coordinate.getX() && Math.abs(c.getY()-coordinate.getY()) == 1
-                    || c.getY() == coordinate.getY() && Math.abs(c.getX()-coordinate.getX()) == 1)
+            if(c.getX() == position.getX() && Math.abs(c.getY()- position.getY()) == 1
+                    || c.getY() == position.getY() && Math.abs(c.getX()- position.getX()) == 1)
                 neighboringObjects.add(gridList.get(c));
-            else if(containCorners && Math.abs(c.getY()-coordinate.getY()) == 1 && Math.abs(c.getX()-coordinate.getX()) == 1)
+            else if(containCorners && Math.abs(c.getY()- position.getY()) == 1 && Math.abs(c.getX()- position.getX()) == 1)
                 neighboringObjects.add(gridList.get(c));
         }
         return neighboringObjects;
     }
 
-    public HashSet<DiscreteCoordinate> getEmptyNeighboringCoordinates(DiscreteCoordinate current, boolean containCorners)
+    public HashSet<DiscreteCoordinate> getEmptyNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinatelist = getNeighborCoordinates(current,containCorners);
-        return (HashSet<DiscreteCoordinate>) coordinatelist.stream().filter(n -> !gridList.containsKey(n)).collect(Collectors.toSet());
+        HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
+        return (HashSet<DiscreteCoordinate>) coordinateList.stream().filter(n -> !gridList.containsKey(n)).collect(Collectors.toSet());
     }
 
-    public HashSet<DiscreteCoordinate> getOccupiedNeighboringCoordinates(DiscreteCoordinate current, boolean containCorners)
+    public HashSet<DiscreteCoordinate> getOccupiedNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinatelist = getNeighborCoordinates(current,containCorners);
-        return (HashSet<DiscreteCoordinate>) coordinatelist.stream().filter(n -> gridList.containsKey(n)).collect(Collectors.toSet());
+        HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
+        return (HashSet<DiscreteCoordinate>) coordinateList.stream().filter(n -> gridList.containsKey(n)).collect(Collectors.toSet());
     }
-
 }

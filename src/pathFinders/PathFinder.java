@@ -77,4 +77,9 @@ public abstract class PathFinder
 
     public final void reversePath()
     { Collections.reverse(path); }
+
+    public String toString()
+    {
+        return start.toString() + " -> " + end.toString() + " path: " + path.toString();
+    }
 }

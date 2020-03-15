@@ -8,7 +8,7 @@ import java.util.Objects;
  * @version 1
  * @since 1/4/19
  */
-public class DiscreteCoordinate
+public class DiscreteCoordinate implements Cloneable
 {
     private int x,y;
 
@@ -25,9 +25,7 @@ public class DiscreteCoordinate
      * @param c another DiscreteCoordinate;
      */
     public DiscreteCoordinate(DiscreteCoordinate c)
-    {
-        set(c.getX(),c.getY());
-    }
+    { set(c.getX(),c.getY()); }
 
     /**
      * creates a DiscreteCoordinate at the position (0,0)
@@ -79,9 +77,7 @@ public class DiscreteCoordinate
      * @return
      */
     public int[] get()
-    {
-        return new int[] {x,y};
-    }
+    { return new int[] {x,y}; }
 
     /**
      * gets the distance between to coordinates;
@@ -92,28 +88,30 @@ public class DiscreteCoordinate
     { return Math.hypot(this.x-c.x, this.y-c.y); }
 
     /**
-     * checks if this class is equal to another object;
-     * @param obj
-     * @return
+     * checks if this class is equal to another object. They are equal if the x and y values are equal
+     * @param obj the given Object
+     * @return true or false depending if the given object is equal to the current object
      */
     public boolean equals(Object obj)
     {
-        if(obj instanceof DiscreteCoordinate) {
+        if(obj instanceof DiscreteCoordinate)
             return (((DiscreteCoordinate) obj).getX() == this.getX() && ((DiscreteCoordinate) obj).getY() == this.getY());
-        }
         return false;
     }
 
+    /**
+     * converts the current DiscreteCoordinate to a continuous coordinate that stores doubles
+     * @return a Coordinate
+     */
     public Coordinate toCoordinate()
-    {
-        return new Coordinate((double) x, (double) y);
-    }
+    { return new Coordinate((double) x, (double) y); }
 
     /**
      * creates custom Hash Code for each object
-     * @return
+     * @return the coordinate hashed;
      */
-    public int hashCode() { return 1; }
+    public int hashCode()
+    { return 1; }
 
     /**
      * return the value of the x and y as a string. in the format (x,y);
