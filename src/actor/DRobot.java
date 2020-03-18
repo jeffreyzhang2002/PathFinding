@@ -63,14 +63,14 @@ public class DRobot extends Actor
         if(!current.equals(path.get(index)))
         {
             this.colorPath(path, new RGB(255,255,255));
-            path = pathFinder.dynamicReplan(super.getPosition(),containCorners);
+            path = pathFinder.replan(super.getPosition(),containCorners);
             this.colorPath(path, new RGB(255,255,0));
             index = 0;
         }
         if(!super.getField().isEmptyPosition(current))
         {
             this.colorPath(path, new RGB(255,255,255));
-            path = pathFinder.dynamicReplan(super.getPosition(),containCorners);
+            path = pathFinder.replan(super.getPosition(),containCorners);
             this.colorPath(path, new RGB(255,255,0));
             index = 0;
             current = (DiscreteCoordinate) getNextCoordinates().toArray()[0];

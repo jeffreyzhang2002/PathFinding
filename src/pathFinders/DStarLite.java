@@ -3,6 +3,8 @@ package pathFinders;
 import grid.BoundedGrid;
 import grid.Field;
 import math.DiscreteCoordinate;
+import pathFinders.pathFindingTileStates.DStarState;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -13,8 +15,8 @@ import java.util.PriorityQueue;
  */
 public class DStarLite extends PathFinder
 {
-    private BoundedGrid<State> openList;
-    private PriorityQueue<State> openQueue;
+    private BoundedGrid<DStarState> openList;
+    private PriorityQueue<DStarState> openQueue;
     private double km = 0;
 
     public DStarLite(Field field)
@@ -33,7 +35,7 @@ public class DStarLite extends PathFinder
     public double heuristic(DiscreteCoordinate start, DiscreteCoordinate end)
     { return start.distance(end); }
 
-    public double calculatePrimaryKey(State currentState)
+    public double calculatePrimaryKey(DStarState currentState)
     { return Math.min(currentState.getG(), currentState.getRHS() + heuristic(super.getStart(),currentState.getCoordinate()) + km); }
 
     public void init()
@@ -47,16 +49,16 @@ public class DStarLite extends PathFinder
             for(int j=0; j < super.getField().getCols(); j++)
             {
                 DiscreteCoordinate currentCoordinate = new DiscreteCoordinate(i,j);
-                openList.set(currentCoordinate, new State(currentCoordinate));
+                openList.set(currentCoordinate, new DStarState(currentCoordinate));
             }
         }
-        State endState = openList.get(super.getEnd());
+        DStarState endState = openList.get(super.getEnd());
         endState.setRHS(0.0);
         endState.setPrimaryKey(calculatePrimaryKey(endState));
         openQueue.add(endState);
     }
 
-    public void updateVertex(State currentState, boolean containCorners)
+    public void updateVertex(DStarState currentState, boolean containCorners)
     {
         if(!currentState.getCoordinate().equals(super.getEnd()))
         {
@@ -83,10 +85,10 @@ public class DStarLite extends PathFinder
 
     public void computeShortestPath(boolean containCorners)
     {
-        State startState = openList.get(super.getStart());
+        DStarState startState = openList.get(super.getStart());
         while(!openQueue.isEmpty() && openQueue.peek().getPrimaryKey() < calculatePrimaryKey(startState) || startState.getRHS() != startState.getG())
         {
-            State currentState = openQueue.poll();
+            DStarState currentState = openQueue.poll();
             double kOld = currentState.getPrimaryKey();
             if(kOld < calculatePrimaryKey(currentState))
             {
@@ -140,14 +142,14 @@ public class DStarLite extends PathFinder
         return path;
     }
 
-    public ArrayList<DiscreteCoordinate> dynamicReplan(DiscreteCoordinate currentPos, boolean containCorners)
+    public ArrayList<DiscreteCoordinate> replan(DiscreteCoordinate currentPos, boolean containCorners)
     {
         km = km + heuristic(super.getEnd(), super.getStart());
         HashSet<DiscreteCoordinate> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
 
         for(DiscreteCoordinate b : blockedNeighbors)
         {
-            State blockedState = openList.get(b);
+            DStarState blockedState = openList.get(b);
             blockedState.setG(Double.POSITIVE_INFINITY);
             blockedState.setRHS(Double.POSITIVE_INFINITY);
             HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(b,containCorners);

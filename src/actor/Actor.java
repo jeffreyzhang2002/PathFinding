@@ -165,4 +165,7 @@ public class Actor
         processing.fill(0);
         processing.rect((float)position.getX(),(float)position.getY(), (float) width, (float) height);
     }
+
+    public String toString()
+    { return position.toString(); }
 }

@@ -37,8 +37,8 @@ public class RGB implements Cloneable
     { set(rgb.getR(), rgb.getG(), rgb.getB()); }
 
     /**
-     * Sets the R value of RGB
-     * @param r the R value
+     * Sets the Robot value of RGB
+     * @param r the Robot value
      */
     public void setR(int r)
     {
@@ -71,7 +71,7 @@ public class RGB implements Cloneable
 
     /**
      * Sets the RGB value to the given values
-     * @param r the R value
+     * @param r the Robot value
      * @param g the G value
      * @param b the B value
      */
@@ -83,7 +83,7 @@ public class RGB implements Cloneable
     }
 
     /**
-     * Sets the RGB value to the given monochrome value. R,G and B are all set to C
+     * Sets the RGB value to the given monochrome value. Robot,G and B are all set to C
      * @param c
      */
     public void set(int c)
@@ -106,8 +106,8 @@ public class RGB implements Cloneable
     { set((r + g + b) /3); }
 
     /**
-     * returns the R value
-     * @return the R value
+     * returns the Robot value
+     * @return the Robot value
      */
     public int getR()
     { return r; }
@@ -128,7 +128,7 @@ public class RGB implements Cloneable
 
     /**
      * return the RGB value as a 1D array with length 3
-     * @return int[] {R,G,B}
+     * @return int[] {Robot,G,B}
      */
     public int[] get()
     { return new int[] {r,g,b}; }
@@ -144,10 +144,10 @@ public class RGB implements Cloneable
 
     /**
      * Checks if the RGB value is within bounds
-     * @param r the R value
+     * @param r the Robot value
      * @param g the B value
      * @param b the G value
-     * @return true if R,G and B are >= 0 and R,G and B are <= 255
+     * @return true if Robot,G and B are >= 0 and Robot,G and B are <= 255
      */
     public boolean isValid(int r, int g, int b)
     { return isValid(r) && isValid(g) && isValid(b); }
