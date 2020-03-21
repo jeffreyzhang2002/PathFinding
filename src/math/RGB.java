@@ -8,7 +8,7 @@ import java.util.Objects;
  * @version 1
  * @since 1/4/19
  */
-public class RGB implements Cloneable
+public class RGB
 {
     private int r, g, b;
     public final int MAXVALUE = 255;

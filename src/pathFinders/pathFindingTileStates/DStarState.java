@@ -1,6 +1,6 @@
 package pathFinders.pathFindingTileStates;
 
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 
 public class DStarState implements Comparable<DStarState>
 {

@@ -2,7 +2,7 @@
 import actor.Barrier;
 import actor.DRobot;
 import grid.Field;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.DStarLite;
 import processing.core.PApplet;
 import java.util.ArrayList;

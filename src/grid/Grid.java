@@ -1,6 +1,6 @@
 package grid;
 
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import java.util.HashSet;
 
 /**
@@ -234,6 +234,11 @@ public abstract class Grid<E>
      * @return the Object that was originally at the position
      */
     public abstract E set(DiscreteCoordinate position, E object);
+
+    /**
+     * clears all objects of the grid
+     */
+    public abstract void clear();
 
     public String toString()
     {

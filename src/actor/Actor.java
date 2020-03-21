@@ -1,8 +1,8 @@
 package actor;
 
 import grid.Field;
-import math.Coordinate;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.Coordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import processing.core.PApplet;
 import java.util.HashSet;
 
@@ -163,7 +163,7 @@ public class Actor
     public void draw(PApplet processing, Coordinate position, double width, double height)
     {
         processing.fill(0);
-        processing.rect((float)position.getX(),(float)position.getY(), (float) width, (float) height);
+        processing.rect(position.getX().floatValue(), position.getY().floatValue(), (float) width, (float) height);
     }
 
     public String toString()

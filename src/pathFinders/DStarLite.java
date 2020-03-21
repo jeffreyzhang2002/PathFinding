@@ -2,7 +2,7 @@ package pathFinders;
 
 import grid.BoundedGrid;
 import grid.Field;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.pathFindingTileStates.DStarState;
 
 import java.util.ArrayList;

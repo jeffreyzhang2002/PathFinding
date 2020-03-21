@@ -3,15 +3,15 @@ import actor.Barrier;
 import actor.Robot;
 import grid.Field;
 import math.*;
+import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.*;
 import processing.core.PApplet;
-
 import java.util.ArrayList;
 
 public class Main2 extends PApplet
 {
     Field field = new Field(50,50);
-    Robot robot = new Robot(field, new DiscreteCoordinate(0,0), new AStar(field));
+    Robot robot = new Robot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
     ArrayList<Barrier> barriers = new ArrayList<>();
 
     public static void main(String[] args)

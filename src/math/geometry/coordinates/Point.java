@@ -1,50 +1,29 @@
-package math;
+package math.geometry.coordinates;
 
-import java.util.Objects;
-
-/**
- * Generic class to describe a coordinate in the 2D plane;
- * @author Jeffrey
- * @version 1
- * @since 1/4/19
- */
-public class DiscreteCoordinate implements Cloneable
+public class Point<E extends Number>
 {
-    private int x,y;
+    private E x,y;
 
     /**
      * creates a DiscreteCoordinate at position x and y
      * @param x the x position of the coordinate
      * @param y the y position of the coordinate
      */
-    public DiscreteCoordinate(int x, int y)
+    public Point(E x, E y)
     { set(x,y); }
-
-    /**
-     * creates a DiscreteCoordinate using another DiscreteCoordinate
-     * @param c another DiscreteCoordinate;
-     */
-    public DiscreteCoordinate(DiscreteCoordinate c)
-    { set(c.getX(),c.getY()); }
-
-    /**
-     * creates a DiscreteCoordinate at the position (0,0)
-     */
-    public DiscreteCoordinate()
-    { set(0,0);}
 
     /**
      * set the value of x on the coordinate
      * @param x
      */
-    public void setX(int x)
+    public void setX(E x)
     { this.x = x; }
 
     /**
      * set the value of y on the coordinate
      * @param y
      */
-    public void setY(int y)
+    public void setY(E y)
     { this.y = y; }
 
     /**
@@ -52,7 +31,7 @@ public class DiscreteCoordinate implements Cloneable
      * @param x
      * @param y
      */
-    public void set(int x, int y)
+    public void set(E x, E y)
     {
         this.x = x;
         this.y = y;
@@ -62,30 +41,23 @@ public class DiscreteCoordinate implements Cloneable
      * return the value of x in the coordinate
      * @return the value of x
      */
-    public int getX()
+    public E getX()
     { return x; }
 
     /**
      * return the value of y in the coordinate
      * @return the value of y
      */
-    public int getY()
+    public E getY()
     { return y; }
-
-    /**
-     * returns x and y of the coordinate as an array;
-     * @return
-     */
-    public int[] get()
-    { return new int[] {x,y}; }
 
     /**
      * gets the distance between to coordinates;
      * @param c another coordinate
      * @return the distance;
      */
-    public double distance(DiscreteCoordinate c)
-    { return Math.hypot(this.x-c.x, this.y-c.y); }
+    public double distance(Point c)
+    { return Math.hypot(this.x.doubleValue() - c.x.doubleValue(), this.y.doubleValue() - c.y.doubleValue()); }
 
     /**
      * checks if this class is equal to another object. They are equal if the x and y values are equal
@@ -94,17 +66,10 @@ public class DiscreteCoordinate implements Cloneable
      */
     public boolean equals(Object obj)
     {
-        if(obj instanceof DiscreteCoordinate)
-            return (((DiscreteCoordinate) obj).getX() == this.getX() && ((DiscreteCoordinate) obj).getY() == this.getY());
+        if(obj instanceof Point)
+            return (((Point) obj).getX().equals(this.getX()) && ((Point) obj).getY().equals(this.getY()));
         return false;
     }
-
-    /**
-     * converts the current DiscreteCoordinate to a continuous coordinate that stores doubles
-     * @return a Coordinate
-     */
-    public Coordinate toCoordinate()
-    { return new Coordinate((double) x, (double) y); }
 
     /**
      * creates custom Hash Code for each object
@@ -117,6 +82,5 @@ public class DiscreteCoordinate implements Cloneable
      * return the value of the x and y as a string. in the format (x,y);
      */
     public String toString()
-    { return "(" + x + "," + y + ")"; }
-
+    { return "(" + x.toString() + "," + y.toString() + ")"; }
 }

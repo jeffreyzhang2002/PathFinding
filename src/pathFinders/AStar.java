@@ -2,7 +2,7 @@ package pathFinders;
 
 import grid.BoundedGrid;
 import grid.Field;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.pathFindingTileStates.AStarState;
 
 import java.util.*;
@@ -10,6 +10,7 @@ import java.util.*;
 public class AStar extends PathFinder
 {
     PriorityQueue<AStarState> openSet;
+    HashSet<AStarState> closedSet;
     BoundedGrid<AStarState> scoreLibrary;
     HashMap<DiscreteCoordinate, DiscreteCoordinate> cameFrom = new HashMap<>();
 
@@ -22,6 +23,7 @@ public class AStar extends PathFinder
     public ArrayList<DiscreteCoordinate> genPath (boolean containCorners)
     {
         openSet   = new PriorityQueue<>();
+        closedSet = new HashSet<>();
         cameFrom  = new HashMap<>();
         scoreLibrary = new BoundedGrid<>(super.getField().getRows(), super.getField().getCols());
 
@@ -41,12 +43,16 @@ public class AStar extends PathFinder
             AStarState current = openSet.poll();
 
             if(current.getCoordinate().equals(super.getEnd()))
-                return reconstructPath(current.getCoordinate(), cameFrom);
+                return reconstructPath(current.getCoordinate());
 
+            closedSet.add(current);
             HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(current.getCoordinate(), containCorners);
 
             for(DiscreteCoordinate n : neighbors)
             {
+                if(closedSet.contains(n))
+                    continue;
+
                 double tempG = current.getGScore() + heuristicCost(current.getCoordinate(), n);
                 AStarState neighborState = scoreLibrary.get(n);
 
@@ -64,7 +70,7 @@ public class AStar extends PathFinder
         return null;
     }
 
-    private ArrayList<DiscreteCoordinate> reconstructPath(DiscreteCoordinate current, HashMap<DiscreteCoordinate, DiscreteCoordinate> cameFrom)
+    private ArrayList<DiscreteCoordinate> reconstructPath(DiscreteCoordinate current)
     {
         ArrayList<DiscreteCoordinate> path = new ArrayList<>();
         path.add(current);

@@ -1,7 +1,7 @@
 package pathFinders;
 
 import grid.Field;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import java.util.ArrayList;
 import java.util.Collections;
 

@@ -2,32 +2,25 @@ package pathFinders.pathFindingTileStates;
 
 import math.geometry.coordinates.DiscreteCoordinate;
 
-public class AStarState implements Comparable<AStarState>
+public class ThetaStarState
 {
-    private double gScore = Double.POSITIVE_INFINITY;
-    private double fScore = Double.POSITIVE_INFINITY;
     private DiscreteCoordinate coordinate;
+    private double gScore = Double.POSITIVE_INFINITY;
 
-    public AStarState(DiscreteCoordinate coordinate)
+    public ThetaStarState(DiscreteCoordinate coordinate)
     { this.coordinate = coordinate; }
 
     public void setGScore(double gScore)
     { this.gScore = gScore; }
 
-    public void setFScore(double fScore)
-    { this.fScore = fScore; }
-
     public double getGScore()
     { return gScore; }
-
-    public double getFScore()
-    { return fScore; }
 
     public DiscreteCoordinate getCoordinate()
     { return coordinate; }
 
-    public int compareTo(AStarState other)
-    { return (int) (this.getFScore() - other.getFScore()); }
+    public int compareTo(ThetaStarState other)
+    { return (int) (this.getGScore() - other.getGScore()); }
 
     public int hashCode()
     {
@@ -43,6 +36,6 @@ public class AStarState implements Comparable<AStarState>
 
     public String toString()
     {
-        return coordinate.toString() + "-> F: " + fScore + " G: " + gScore;
+        return coordinate.toString() + " G: " + gScore;
     }
 }

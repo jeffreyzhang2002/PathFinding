@@ -1,8 +1,8 @@
 package grid;
 
 import actor.Actor;
-import math.Coordinate;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.Coordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import math.RGB;
 import processing.core.PApplet;
 
@@ -52,7 +52,7 @@ public class Field extends BoundedGrid<Actor>
     }
 
     /**
-     * Places an actor inside the Grid using the Coordinate already specified within the actor class. For example if
+     * Places an actor inside the Grid using the ContinuousCoordinate already specified within the actor class. For example if
      * the actor's position is (1,1) the Actor will be placed at the (1,1) spot on the field.
      * @param actor An Actor class that will be placed into the Grid
      * @return The Actor that was originally at that position
@@ -106,7 +106,9 @@ public class Field extends BoundedGrid<Actor>
     /**
      * Displays the Field after the render engine is initialized
      */
-    public void renderField() {
+    public void renderField()
+    {
+        processing.strokeWeight(1);
         processing.rectMode(processing.CORNER);
         for (int i = 0; i < super.getRows(); i++)
             for (int j = 0; j < super.getCols(); j++) {
@@ -115,6 +117,23 @@ public class Field extends BoundedGrid<Actor>
                     processing.fill(255);
                 else
                     processing.fill(color.getR(),color.getG(),color.getB());
+                processing.rect((float) (origin.getX() + i * tileWidth), (float) (origin.getY() + j * tileHeight), (float) tileWidth, (float) tileHeight);
+            }
+    }
+
+    public void renderBackgroundTile()
+    {
+        processing.noStroke();
+        processing.fill(255);
+        processing.rect((float) origin.getX(), (float)origin.getY(), (float)(origin.getX() + width), (float)(origin.getY() + height));
+        processing.rectMode(processing.CORNER);
+        for (int i = 0; i < super.getRows(); i++)
+            for (int j = 0; j < super.getCols(); j++) {
+                RGB color = tileColorTracker.get(new DiscreteCoordinate(i,j));
+                if (color == null)
+                    processing.fill(255);
+                else
+                    processing.fill(color.getR(), color.getG(), color.getB());
                 processing.rect((float) (origin.getX() + i * tileWidth), (float) (origin.getY() + j * tileHeight), (float) tileWidth, (float) tileHeight);
             }
     }
@@ -147,7 +166,7 @@ public class Field extends BoundedGrid<Actor>
 
     /**
      * sets the Tile Color at the given coordinate
-     * @param coordinate the Coordinate that will have its color changed
+     * @param coordinate the ContinuousCoordinate that will have its color changed
      * @param color the Color it will be changed to
      */
     public void setTileColor(DiscreteCoordinate coordinate, RGB color)
@@ -160,4 +179,19 @@ public class Field extends BoundedGrid<Actor>
      */
     public RGB getTileColor(DiscreteCoordinate coordinate)
     { return tileColorTracker.get(coordinate); }
+
+    public DiscreteCoordinate getOrigin()
+    { return origin; }
+
+    public double getWidth()
+    { return width; }
+
+    public double getHeight()
+    { return height; }
+
+    public double getTileWidth()
+    { return tileWidth; }
+
+    public double getTileHeight()
+    { return tileHeight; }
 }

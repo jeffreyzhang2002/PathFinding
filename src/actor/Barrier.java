@@ -1,7 +1,7 @@
 package actor;
 
 import grid.Field;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 
 /**
  * Creates a Barrier Actor
