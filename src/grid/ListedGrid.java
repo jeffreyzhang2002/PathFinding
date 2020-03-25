@@ -1,6 +1,6 @@
 package grid;
 
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -18,14 +18,14 @@ public class ListedGrid<E> extends Grid<E>
     public E get(DiscreteCoordinate coordinate)
     {
         if(!isValid(coordinate))
-            throw new IllegalArgumentException("Coordinate " + coordinate + "is not on the grid");
+            throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
         return gridList.get(coordinate);
     }
 
     public E set(DiscreteCoordinate coordinate, E obj)
     {
         if(!isValid(coordinate))
-            throw new IllegalArgumentException("Coordinate " + coordinate + "is not on the grid");
+            throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
         return gridList.put(coordinate, obj);
 
     }
@@ -33,7 +33,7 @@ public class ListedGrid<E> extends Grid<E>
     public E remove(DiscreteCoordinate coordinate)
     {
         if(!isValid(coordinate))
-            throw new IllegalArgumentException("Coordinate " + coordinate + "is not on the grid");
+            throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
         return gridList.remove(coordinate);
     }
 
@@ -68,4 +68,7 @@ public class ListedGrid<E> extends Grid<E>
         HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
         return (HashSet<DiscreteCoordinate>) coordinateList.stream().filter(n -> gridList.containsKey(n)).collect(Collectors.toSet());
     }
+
+    public void clear()
+    { gridList.clear(); }
 }

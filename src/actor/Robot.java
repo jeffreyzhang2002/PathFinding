@@ -2,49 +2,75 @@ package actor;
 
 import grid.Field;
 import math.*;
+import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.PathFinder;
 import processing.core.PApplet;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Creates an instance of a Robot
+ */
 public class Robot extends Actor
 {
     private PathFinder pathFinder;
-    private ArrayList<DiscreteCoordinate> path;
-    private boolean doDynamicReplanning = true;
     private boolean containCorners = true;
     private int index = 1;
+    public RGB color;
 
-    public Robot(Field grid, DiscreteCoordinate position, PathFinder pathFinder)
+    /**
+     * Creates a Robot by giving its field, its position and its pathFinding engine
+     * @param field the Field it will run on
+     * @param position The position it will be at
+     * @param pathFinder the PathFinder it will use to pathFind
+     */
+    public Robot(Field field, DiscreteCoordinate position, PathFinder pathFinder)
     {
-        super(grid, position);
+        super(field, position);
         this.pathFinder = pathFinder;
+        color = new RGB(255, 0, 0);
     }
 
+    /**
+     * initializes path finding algorithum. This method should be run before generating path
+     * @param end the goal coordinate for algorithum to generate the path
+     */
     public void initPathFinder(DiscreteCoordinate end)
     {
         pathFinder.setStart(super.getPosition());
         pathFinder.setEnd(end);
     }
 
-    public void generatePath()
-    { path = pathFinder.genPath(containCorners); }
+    /**
+     * Generates the path the robot will follow. This method can not be run before initializing the path Finder.
+     * @return true if their is a valid path. False otherwise
+     */
+    public boolean generatePath()
+    { return pathFinder.generatePath(containCorners); }
 
+    /**
+     * This method returns a List of all possible next positions. Because this robot follows a path this will return the next position on the path
+     * @return the next position on the path
+     */
     public HashSet<DiscreteCoordinate> getNextCoordinates()
     {
-        HashSet<DiscreteCoordinate> temp =  new HashSet<DiscreteCoordinate>();
-
-        if(path == null)
-            return null;
-
-        if(index >= path.size())
+        if(pathFinder.getPath() == null)
+            return super.getNextCoordinates();
+        else if(index >= pathFinder.getPath().size())
             index = 0;
 
-        temp.add(path.get(index));
+        HashSet<DiscreteCoordinate> temp =  new HashSet<DiscreteCoordinate>();
+
+        temp.add(pathFinder.getPath().get(index));
 
         return temp;
     }
 
+    /**
+     * This method returns the next position on the path. If the path is null this will return the current position
+     * @param coordinateList a HashSet of possible coordinate this actor can go to
+     * @return the next position
+     */
     public DiscreteCoordinate chooseNextCoordinate(HashSet<DiscreteCoordinate> coordinateList)
     {
         if(coordinateList == null || coordinateList.isEmpty())
@@ -54,39 +80,63 @@ public class Robot extends Actor
 
         if(!super.getField().isEmptyPosition(current))
         {
-            pathFinder.setStart(super.getPosition());
-            ArrayList<DiscreteCoordinate> newPath = pathFinder.genPath(containCorners);
-            if(newPath == null) {
-                path = null;
-                return super.getPosition();
-            }
-
-            for(int i = index; i > 0; i--)
-                newPath.add(0, path.get(i));
-
-            path = newPath;
-
+           pathFinder.dynamicReplan(super.getPosition(), containCorners);
             return super.getPosition();
         }
+
         index++;
         return current;
     }
 
-    public void draw(PApplet processing, Coordinate position, double width, double height)
-    {
-        processing.fill(255,0,0);
-        processing.rect((float)position.getX(),(float)position.getY(), (float) width, (float) height);
-    }
-
-    public Actor droppedActor()
-    { return null; }
-
+    /**
+     * returns the path the robot will follow
+     * @return the Path
+     */
     public ArrayList<DiscreteCoordinate> getPath()
-    { return path; }
+    { return pathFinder.getPath(); }
 
-    public void colorPath()
+    /**
+     * This is the settings for the robot to render
+     * @param processing the Rendering Engine
+     */
+    public void renderSettings(PApplet processing)
+    { processing.rectMode(PApplet.CORNER); }
+
+
+    /**
+     * This method overrider the draw method and renders the robot
+     * @param processing the Rendering Engine
+     */
+    public void renderDraw(PApplet processing)
     {
-        for(DiscreteCoordinate c: path)
-            super.getField().getTileColorTracker().set(c, new RGB(255,255,0));
+        processing.fill(color.getR(), color.getG(), color.getB());
+        processing.stroke(color.getR(), color.getG(), color.getB());
+        processing.rect(super.getOrigin().getX().floatValue(), super.getOrigin().getY().floatValue(),
+                super.getWidth(),super.getHeight());
     }
+
+    /**
+     * colors the path the robot will follow
+     * @param color
+     */
+    public void colorPath(RGB color)
+    {
+        if(pathFinder.getPath() != null)
+            for(DiscreteCoordinate current : pathFinder.getPath())
+                super.getField().setTileColor(current, color);
+    }
+
+    /**
+     * Sets the color for the robot
+     * @param color
+     */
+    public void setColor(RGB color)
+    { this.color = color; }
+
+    /**
+     * gets the color of the robot
+     * @return the color of the robot
+     */
+    public RGB getColor()
+    { return color; }
 }

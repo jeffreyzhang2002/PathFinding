@@ -1,12 +1,11 @@
 package actor;
 
 import grid.Field;
-import math.Coordinate;
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.Coordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 import math.RGB;
 import pathFinders.DStarLite;
 import processing.core.PApplet;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -46,8 +45,8 @@ public class DRobot extends Actor
         if(index >= path.size())
             index = 0;
 
-        if(Math.random()*100 < 20)
-            temp.addAll(super.getField().getEmptyNeighboringCoordinates(path.get(index),true));
+//        if(Math.random()*100 < 20)
+//            temp.addAll(super.getField().getEmptyNeighboringCoordinates(path.get(index),true));
 
         temp.add(path.get(index));
         return temp;
@@ -63,14 +62,14 @@ public class DRobot extends Actor
         if(!current.equals(path.get(index)))
         {
             this.colorPath(path, new RGB(255,255,255));
-            path = pathFinder.dynamicReplan(super.getPosition(),containCorners);
+            path = pathFinder.replan(super.getPosition(),containCorners);
             this.colorPath(path, new RGB(255,255,0));
             index = 0;
         }
         if(!super.getField().isEmptyPosition(current))
         {
             this.colorPath(path, new RGB(255,255,255));
-            path = pathFinder.dynamicReplan(super.getPosition(),containCorners);
+            path = pathFinder.replan(path.get(index-1),containCorners);
             this.colorPath(path, new RGB(255,255,0));
             index = 0;
             current = (DiscreteCoordinate) getNextCoordinates().toArray()[0];
@@ -79,10 +78,10 @@ public class DRobot extends Actor
         return current;
     }
 
-    public void draw(PApplet processing, Coordinate position, double width, double height)
+    public void renderDraw(PApplet processing, Coordinate position, double width, double height)
     {
         processing.fill(255,0,0);
-        processing.rect((float)position.getX(),(float)position.getY(), (float) width, (float) height);
+        processing.rect(position.getX().floatValue(),position.getY().floatValue(), (float) width, (float) height);
     }
 
     public Actor droppedActor()
@@ -93,6 +92,18 @@ public class DRobot extends Actor
     public ArrayList<DiscreteCoordinate> getPath()
     {
         return path;
+    }
+
+    public void renderSettings(PApplet processing)
+    {
+        processing.rectMode(PApplet.CORNER);
+    }
+
+    public void renderDraw(PApplet processing)
+    {
+        processing.fill(255,0,0);
+        processing.rect(super.getOrigin().getX().floatValue(), super.getOrigin().getY().floatValue(),
+                super.getWidth(),super.getHeight());
     }
 
     public void colorPath(ArrayList<DiscreteCoordinate> path, RGB color)

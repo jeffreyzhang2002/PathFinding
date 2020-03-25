@@ -1,15 +1,15 @@
-package pathFinders;
+package pathFinders.pathFindingTileStates;
 
-import math.DiscreteCoordinate;
+import math.geometry.coordinates.DiscreteCoordinate;
 
-public class State implements Comparable<State>
+public class DStarState implements Comparable<DStarState>
 {
     private DiscreteCoordinate coordinate;
     private double RHS = Double.POSITIVE_INFINITY;
     private double G = Double.POSITIVE_INFINITY;
     private double primaryKey;
 
-    public State(DiscreteCoordinate coordinate)
+    public DStarState(DiscreteCoordinate coordinate)
     {
         this.coordinate = coordinate;
     }
@@ -37,7 +37,7 @@ public class State implements Comparable<State>
     public void setPrimaryKey(double primaryKey)
     { this.primaryKey = primaryKey; }
 
-    public int compareTo(State other)
+    public int compareTo(DStarState other)
     {
         double  t = RHS - other.getRHS();
         return (int) t;
@@ -45,8 +45,8 @@ public class State implements Comparable<State>
 
     public boolean equals(Object other)
     {
-        if(other instanceof State)
-            return coordinate.equals(((State) other).getCoordinate());
+        if(other instanceof DStarState)
+            return coordinate.equals(((DStarState) other).getCoordinate());
         return false;
     }
 
