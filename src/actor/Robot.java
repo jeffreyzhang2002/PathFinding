@@ -2,7 +2,6 @@ package actor;
 
 import grid.Field;
 import math.*;
-import math.geometry.coordinates.Coordinate;
 import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.PathFinder;
 import processing.core.PApplet;
@@ -21,9 +20,9 @@ public class Robot extends Actor
 
     /**
      * Creates a Robot by giving its field, its position and its pathFinding engine
-     * @param field
-     * @param position
-     * @param pathFinder
+     * @param field the Field it will run on
+     * @param position The position it will be at
+     * @param pathFinder the PathFinder it will use to pathFind
      */
     public Robot(Field field, DiscreteCoordinate position, PathFinder pathFinder)
     {
@@ -33,8 +32,8 @@ public class Robot extends Actor
     }
 
     /**
-     * initializes path finding. This method should be run before generate path
-     * @param end the goal coordinate
+     * initializes path finding algorithum. This method should be run before generating path
+     * @param end the goal coordinate for algorithum to generate the path
      */
     public void initPathFinder(DiscreteCoordinate end)
     {
@@ -101,20 +100,19 @@ public class Robot extends Actor
      * @param processing the Rendering Engine
      */
     public void renderSettings(PApplet processing)
-    { processing.rectMode(PApplet.CENTER); }
+    { processing.rectMode(PApplet.CORNER); }
+
 
     /**
-     * This method is meant to draw the entire robot.
+     * This method overrider the draw method and renders the robot
      * @param processing the Rendering Engine
-     * @param position the position it will drawn at
-     * @param width the Width
-     * @param height the Height
      */
-    public void draw(PApplet processing, Coordinate position, double width, double height)
+    public void renderDraw(PApplet processing)
     {
         processing.fill(color.getR(), color.getG(), color.getB());
-        //processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width*18 ,(float) height*18);
-        processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width,(float) height);
+        processing.stroke(color.getR(), color.getG(), color.getB());
+        processing.rect(super.getOrigin().getX().floatValue(), super.getOrigin().getY().floatValue(),
+                super.getWidth(),super.getHeight());
     }
 
     /**
@@ -128,11 +126,13 @@ public class Robot extends Actor
                 super.getField().setTileColor(current, color);
     }
 
+    public void setColor(RGB color)
+    { this.color = color; }
+
     /**
      * gets the color of the robot
      * @return the color of the robot
      */
     public RGB getColor()
     { return color; }
-
 }

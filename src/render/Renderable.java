@@ -26,6 +26,11 @@ public abstract class Renderable
         this.height = height;
     }
 
+    public Renderable()
+    {
+
+    }
+
     /**
      * Creates an instance of Renderable using the point where it it is rendered.
      * @param origin the origin of the Renderable
@@ -49,7 +54,6 @@ public abstract class Renderable
     public final void render(PApplet processing)
     {
         renderSettings(processing);
-        processing.pushMatrix();
         if(!useMethod)
             transformation.doTransformation(processing);
         else {
@@ -57,8 +61,7 @@ public abstract class Renderable
             internalRenderTransformation(processing);
             processing.popMatrix();
         }
-        processing.popMatrix();
-        renderDraw(processing);
+        this.renderDraw(processing);
     }
 
     /**
@@ -106,12 +109,24 @@ public abstract class Renderable
 
     }
 
+    public void renderBackground(PApplet processing)
+    {
+
+    }
+
     /**
      * gets the Origin for the render
      * @return the Origin
      */
     public Point<Float> getOrigin()
     { return origin; }
+
+    /**
+     * set the Origin for the render
+     * @param origin
+     */
+    public void setOrigin(Point<Float> origin)
+    { this.origin = origin; }
 
     /**
      * gets the Width for the render
@@ -121,11 +136,25 @@ public abstract class Renderable
     { return width; }
 
     /**
+     * sets the width for the render
+     * @param width
+     */
+    public void setWidth(float width)
+    { this.width = width; }
+
+    /**
      * gets the Height of the render
      * @return the height of the render
      */
     public float getHeight()
     { return height; }
+
+    /**
+     * sets the Height of the render
+     * @param height height of the render
+     */
+    public void setHeight(float height)
+    { this.height = height; }
 
     /**
      * gets the transformation for the render

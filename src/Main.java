@@ -3,14 +3,18 @@ import actor.Barrier;
 import actor.DRobot;
 import grid.Field;
 import math.geometry.coordinates.DiscreteCoordinate;
+import math.geometry.coordinates.Point;
 import pathFinders.DStarLite;
 import processing.core.PApplet;
+import render.ObjectRenderings.FieldRendering;
+
 import java.util.ArrayList;
 
 public class Main extends PApplet
 {
     Field field = new Field(144,144);
-    DRobot robot =new DRobot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
+    FieldRendering fieldrender = new FieldRendering(field, new Point<Float>(0f,0f), 800, 800);
+    DRobot robot = new DRobot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
     ArrayList<Barrier> barriers = new ArrayList<>();
 
     public static void main(String[] args)
@@ -19,7 +23,7 @@ public class Main extends PApplet
     public void settings()
     {
         size(800,800);
-        field.initRendering(this, new DiscreteCoordinate(0,0), width, height);
+        //field.initRendering(this, new DiscreteCoordinate(0,0), width, height);
         robot.initPathFinder(new DiscreteCoordinate(field.getRows() - 1,field.getCols() - 1));
         robot.placeSelfInGrid();
 
@@ -34,7 +38,7 @@ public class Main extends PApplet
 
     public void setup()
     {
-        field.render();
+        fieldrender.render(this);
     }
 
     public void draw()
@@ -45,7 +49,7 @@ public class Main extends PApplet
     public void mousePressed()
     {
         robot.step();
-        field.render();
+        fieldrender.render(this);
     }
 
     public void keyPressed()
@@ -54,7 +58,6 @@ public class Main extends PApplet
         appearing.placeSelfInGrid();
         barriers.add(appearing);
 
-        field.render();
-        field.renderActor();
+        fieldrender.render(this);
     }
 }

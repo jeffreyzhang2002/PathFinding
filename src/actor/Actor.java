@@ -1,19 +1,17 @@
 package actor;
 
 import grid.Field;
-import math.geometry.coordinates.Coordinate;
 import math.geometry.coordinates.DiscreteCoordinate;
 import processing.core.PApplet;
 import render.Renderable;
-
 import java.util.HashSet;
 
 /**
  * This abstract class is a meant for for creating Actors that can be placed on top of a field.
  * The following methods must be overridden getNextCoordinates() and chooseNextCoordinates()
- * The following methods may be overridden renderSettings(), draw(), step() and droppedActor()
+ * The following methods may be overridden renderSettings(), renderDraw(), step() and droppedActor()
  */
-public class Actor
+public abstract class Actor extends Renderable
 {
     private Field field;
     private DiscreteCoordinate position;
@@ -56,31 +54,6 @@ public class Actor
      */
     public final Field getField()
     { return field; }
-
-    /**
-     * Render the current actor at the given position
-     * @param processing the Processing engine
-     * @param position the Position it will be rendered at
-     * @param width the width the character render will be
-     * @param height the Height the character render will be
-     */
-    public final void render(PApplet processing, Coordinate position, double width, double height)
-    {
-        renderSettings(processing);
-        draw(processing,position,width,height);
-    }
-
-    /**
-     * Render the current actor at the actual position
-     * @param processing the Processing engine
-     * @param width the width the character render will be
-     * @param height the Height the character render will be
-     */
-    public final void nativeRender(PApplet processing, float width, float height)
-    {
-        renderSettings(processing);
-        draw(processing,position.toCoordinate(),width,height);
-    }
 
     /**
      * This method put the actor on the grid using the actors current position.
@@ -149,24 +122,13 @@ public class Actor
      * The rendering settings for the current actor. This method can be overridden
      * @param processing the Rendering Engine
      */
-    public void renderSettings(PApplet processing)
-    {
-        processing.ellipseMode(processing.CORNER);
-        processing.rectMode(processing.CORNER);
-    }
+    public abstract void renderSettings(PApplet processing);
 
     /**
      * What is drawn when render is called. This method should be overridden
      * @param processing the Rendering Engine
-     * @param position the position it will drawn at
-     * @param width the Width
-     * @param height the Height
      */
-    public void draw(PApplet processing, Coordinate position, double width, double height)
-    {
-        processing.fill(0);
-        processing.rect(position.getX().floatValue(), position.getY().floatValue(), (float) width, (float) height);
-    }
+    public abstract void renderDraw(PApplet processing);
 
     public String toString()
     { return position.toString(); }

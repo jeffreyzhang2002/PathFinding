@@ -3,7 +3,6 @@ package render.ObjectRenderings;
 import actor.Actor;
 import grid.Field;
 import math.RGB;
-import math.geometry.coordinates.Coordinate;
 import math.geometry.coordinates.DiscreteCoordinate;
 import math.geometry.coordinates.Point;
 import processing.core.PApplet;
@@ -29,14 +28,22 @@ public class FieldRendering extends Renderable
         processing.rectMode(PApplet.CORNER);
     }
 
-    public void renderDraw(PApplet processing)
+    public void renderTransformation(PApplet processing)
     {
 
     }
 
-    private void renderBackground(PApplet processing)
+    public void renderDraw(PApplet processing)
     {
-        processing.strokeWeight(3);
+        renderBackground(processing);
+        renderTiles(processing);
+        if(renderActors)
+            renderActors(processing);
+    }
+
+    public void renderBackground(PApplet processing)
+    {
+        processing.strokeWeight(1);
         processing.stroke(0);
         processing.fill(255);
         processing.rect(super.getOrigin().getX(), super.getOrigin().getY(), super.getWidth(), super.getHeight());
@@ -55,22 +62,38 @@ public class FieldRendering extends Renderable
                     processing.fill(color.getR(), color.getG(), color.getB());
 
                 if(renderTiles)
+                {
                     processing.stroke(0);
+                }
                 else
-                    processing.stroke(color.getR(), color.getG(), color.getB());
+                {
+                    if(color == null)
+                        processing.stroke(255);
+                    else
+                        processing.stroke(color.getR(), color.getG(), color.getB());
+                }
 
-                processing.rect((float) (super.getOrigin().getX() + i * tileWidth),
-                        (float) (super.getOrigin().getY() + j * tileHeight), (float) tileWidth, (float) tileHeight);
+
+                processing.rect((super.getOrigin().getX() + i * tileWidth),
+                        (super.getOrigin().getY() + j * tileHeight),  tileWidth, tileHeight);
             }
         }
     }
 
-    private void renderActors(PApplet processing)
+    public void renderActors(PApplet processing)
     {
-        for(Actor actor: field.getAllObjects())
-            actor.render(processing, new Coordinate(super.getOrigin().getX() + actor.getPosition().getX() * tileWidth ,
-                    super.getOrigin().getY() + actor.getPosition().getY() * tileHeight), tileWidth,tileHeight);
+        for(Actor actor: field.getAllObjects()) {
+            actor.setOrigin(new Point<>((super.getOrigin().getX() + actor.getPosition().getX() * tileWidth),
+                    (super.getOrigin().getY() + actor.getPosition().getY() * tileHeight)));
+            actor.setWidth(tileWidth);
+            actor.setHeight(tileHeight);
+            actor.render(processing);
+        }
     }
 
+    public void setRenderTiles(boolean renderTiles)
+    { this.renderTiles = renderTiles; }
 
+    public void setRenderActors(boolean renderActors)
+    { this.renderActors = renderActors; }
 }

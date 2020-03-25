@@ -78,7 +78,7 @@ public class DRobot extends Actor
         return current;
     }
 
-    public void draw(PApplet processing, Coordinate position, double width, double height)
+    public void renderDraw(PApplet processing, Coordinate position, double width, double height)
     {
         processing.fill(255,0,0);
         processing.rect(position.getX().floatValue(),position.getY().floatValue(), (float) width, (float) height);
@@ -92,6 +92,18 @@ public class DRobot extends Actor
     public ArrayList<DiscreteCoordinate> getPath()
     {
         return path;
+    }
+
+    public void renderSettings(PApplet processing)
+    {
+        processing.rectMode(PApplet.CORNER);
+    }
+
+    public void renderDraw(PApplet processing)
+    {
+        processing.fill(255,0,0);
+        processing.rect(super.getOrigin().getX().floatValue(), super.getOrigin().getY().floatValue(),
+                super.getWidth(),super.getHeight());
     }
 
     public void colorPath(ArrayList<DiscreteCoordinate> path, RGB color)
