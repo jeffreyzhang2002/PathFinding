@@ -19,9 +19,5 @@ public class PointRendering extends Renderable
     }
 
     public void renderSettings(PApplet processing)
-    {
-        processing.ellipseMode(PApplet.CENTER);
-    }
-
-
+    { processing.ellipseMode(PApplet.CENTER); }
 }

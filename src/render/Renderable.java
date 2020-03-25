@@ -26,11 +26,6 @@ public abstract class Renderable
         this.height = height;
     }
 
-    public Renderable()
-    {
-
-    }
-
     /**
      * Creates an instance of Renderable using the point where it it is rendered.
      * @param origin the origin of the Renderable
@@ -48,12 +43,23 @@ public abstract class Renderable
     }
 
     /**
+     * Creates a generic renderable class.
+     */
+    public Renderable()
+    {
+        this.origin = new Point<Float>(0f,0f);
+        width = 0;
+        height = 0;
+    }
+
+    /**
      * This method is used to render the entire class
      * @param processing rendering Engine
      */
     public final void render(PApplet processing)
     {
         renderSettings(processing);
+        renderBackground(processing);
         if(!useMethod)
             transformation.doTransformation(processing);
         else {
@@ -64,11 +70,22 @@ public abstract class Renderable
         this.renderDraw(processing);
     }
 
+    public void renderBackground(PApplet processing)
+    {
+
+    }
+
     /**
      * Settings for rendering. For example method like RectMode and EllipseMode should be ran here
      * @param processing the rendering Engine
      */
     public abstract void renderSettings(PApplet processing);
+
+    /**
+     * What will be drawn for the Renderable.
+     * @param processing
+     */
+    public abstract void renderDraw(PApplet processing);
 
     /**
      * This is an internal method that process where they transformation should be done. It can either be done
@@ -80,6 +97,51 @@ public abstract class Renderable
         renderTransformation(processing);
         useMethod = true;
     }
+
+    /**
+     * This method should be overriden for transformation. If this method is run, the transformation given by the
+     * set transformation will be removed from this method;
+     * @param processing
+     */
+    public void renderTransformation(PApplet processing)
+    {
+
+    }
+
+    /**
+     * gets the Origin for the render
+     * @return the Origin
+     */
+    public Point<Float> getOrigin()
+    { return origin; }
+
+    /**
+     * gets the transformation for the render
+     * @return the transformation
+     */
+    public Transformation getTransformation()
+    { return transformation; }
+
+    /**
+     * gets the Width for the render
+     * @return the width of the render
+     */
+    public float getWidth()
+    { return width; }
+
+    /**
+     * gets the Height of the render
+     * @return the height of the render
+     */
+    public float getHeight()
+    { return height; }
+
+    /**
+     * set the Origin for the render
+     * @param origin
+     */
+    public void setOrigin(Point<Float> origin)
+    { this.origin = origin; }
 
     /**
      * Sets the transformation for rendering. If this method is run, the renderTransformationmethod will no longer be run
@@ -96,44 +158,8 @@ public abstract class Renderable
      * method. If false it will use the transformation method
      * @param useMethod
      */
-    public void setUsingMethod(boolean useMethod)
+    public void setTransformationMethod(boolean useMethod)
     { this.useMethod = useMethod; }
-
-    /**
-     * This method should be overriden for transformation. If this method is run, the transformation given by the
-     * set transformation will be removed from this method;
-     * @param processing
-     */
-    public void renderTransformation(PApplet processing)
-    {
-
-    }
-
-    public void renderBackground(PApplet processing)
-    {
-
-    }
-
-    /**
-     * gets the Origin for the render
-     * @return the Origin
-     */
-    public Point<Float> getOrigin()
-    { return origin; }
-
-    /**
-     * set the Origin for the render
-     * @param origin
-     */
-    public void setOrigin(Point<Float> origin)
-    { this.origin = origin; }
-
-    /**
-     * gets the Width for the render
-     * @return the width of the render
-     */
-    public float getWidth()
-    { return width; }
 
     /**
      * sets the width for the render
@@ -143,32 +169,12 @@ public abstract class Renderable
     { this.width = width; }
 
     /**
-     * gets the Height of the render
-     * @return the height of the render
-     */
-    public float getHeight()
-    { return height; }
-
-    /**
      * sets the Height of the render
      * @param height height of the render
      */
     public void setHeight(float height)
     { this.height = height; }
 
-    /**
-     * gets the transformation for the render
-     * @return the transformation
-     */
-    public Transformation getTransformation()
-    { return transformation; }
-
-    /**
-     * What will be drawn for the Renderable.
-     * @param processing
-     */
-    public abstract void renderDraw(PApplet processing);
-
     public String toString()
-    { return "Origin: " + origin.toString(); }
+    { return "Origin: " + origin.toString() + " Width: " + width + " Height: " + height; }
 }

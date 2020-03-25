@@ -126,6 +126,10 @@ public class Robot extends Actor
                 super.getField().setTileColor(current, color);
     }
 
+    /**
+     * Sets the color for the robot
+     * @param color
+     */
     public void setColor(RGB color)
     { this.color = color; }
 
