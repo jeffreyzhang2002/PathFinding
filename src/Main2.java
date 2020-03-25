@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class Main2 extends PApplet
 {
-    Field field = new Field(50,50);
+    Field field = new Field(144,144);
     Robot robot = new Robot(field, new DiscreteCoordinate(0,0), new DStarLite(field));
     ArrayList<Barrier> barriers = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class Main2 extends PApplet
 
     public void settings()
     {
-        size(600,600);
+        size(800,800);
         field.initRendering(this, new DiscreteCoordinate(0,0), width, height);
         robot.initPathFinder(new DiscreteCoordinate(field.getRows() - 1,field.getCols() - 1));
         robot.placeSelfInGrid();

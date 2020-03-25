@@ -4,6 +4,8 @@ import grid.Field;
 import math.geometry.coordinates.Coordinate;
 import math.geometry.coordinates.DiscreteCoordinate;
 import processing.core.PApplet;
+import render.Renderable;
+
 import java.util.HashSet;
 
 /**

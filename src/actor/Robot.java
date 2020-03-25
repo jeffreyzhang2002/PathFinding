@@ -113,8 +113,8 @@ public class Robot extends Actor
     public void draw(PApplet processing, Coordinate position, double width, double height)
     {
         processing.fill(color.getR(), color.getG(), color.getB());
-        processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width*18 ,(float) height*18);
-        //processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width,(float) height);
+        //processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width*18 ,(float) height*18);
+        processing.rect((float) (position.getX() + width/2) ,(float) (position.getY() + height/2),(float) width,(float) height);
     }
 
     /**

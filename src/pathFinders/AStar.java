@@ -35,7 +35,7 @@ public class AStar extends PathFinder
 
         AStarState start = scoreLibrary.get(super.getStart());
         start.setGScore(0);
-        start.setFScore(heuristicCost(super.getStart(), super.getEnd()));
+        start.setFScore(heuristicCost(start));
         openSet.add(start);
 
         while(!openSet.isEmpty())
@@ -84,11 +84,10 @@ public class AStar extends PathFinder
     }
 
     private double heuristicCost(AStarState state)
-    { return state.getCoordinate().distance(super.getEnd()); }
+    { return heuristicCost(state.getCoordinate(), super.getEnd()); }
 
     private double heuristicCost(DiscreteCoordinate a, DiscreteCoordinate b)
     {
-        //return Math.abs(a.getX()-b.getX()) + Math.abs(a.getY()-b.getY());
-        return a.distance(b);
+        return a.distanceSquared(b);
     }
 }

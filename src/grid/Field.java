@@ -5,6 +5,7 @@ import math.geometry.coordinates.Coordinate;
 import math.geometry.coordinates.DiscreteCoordinate;
 import math.RGB;
 import processing.core.PApplet;
+import render.Renderable;
 
 /**
  * a Class that represent a 2D field in which actors can interact with its environment
@@ -123,17 +124,20 @@ public class Field extends BoundedGrid<Actor>
 
     public void renderBackgroundTile()
     {
-        processing.noStroke();
         processing.fill(255);
-        processing.rect((float) origin.getX(), (float)origin.getY(), (float)(origin.getX() + width), (float)(origin.getY() + height));
+        processing.rect((float) origin.getX(), (float)origin.getY(), (float)(width), (float)(height));
         processing.rectMode(processing.CORNER);
         for (int i = 0; i < super.getRows(); i++)
             for (int j = 0; j < super.getCols(); j++) {
                 RGB color = tileColorTracker.get(new DiscreteCoordinate(i,j));
                 if (color == null)
+                {
+                    processing.stroke(255);
                     processing.fill(255);
-                else
+                } else {
+                    processing.stroke(color.getR(), color.getG(), color.getB());
                     processing.fill(color.getR(), color.getG(), color.getB());
+                }
                 processing.rect((float) (origin.getX() + i * tileWidth), (float) (origin.getY() + j * tileHeight), (float) tileWidth, (float) tileHeight);
             }
     }

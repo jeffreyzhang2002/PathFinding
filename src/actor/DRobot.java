@@ -45,8 +45,8 @@ public class DRobot extends Actor
         if(index >= path.size())
             index = 0;
 
-        if(Math.random()*100 < 20)
-            temp.addAll(super.getField().getEmptyNeighboringCoordinates(path.get(index),true));
+//        if(Math.random()*100 < 20)
+//            temp.addAll(super.getField().getEmptyNeighboringCoordinates(path.get(index),true));
 
         temp.add(path.get(index));
         return temp;
@@ -69,7 +69,7 @@ public class DRobot extends Actor
         if(!super.getField().isEmptyPosition(current))
         {
             this.colorPath(path, new RGB(255,255,255));
-            path = pathFinder.replan(super.getPosition(),containCorners);
+            path = pathFinder.replan(path.get(index-1),containCorners);
             this.colorPath(path, new RGB(255,255,0));
             index = 0;
             current = (DiscreteCoordinate) getNextCoordinates().toArray()[0];

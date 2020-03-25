@@ -17,12 +17,12 @@ public class GUI extends PApplet
 
     public void settings()
     {
-        fullScreen();
-        field.initRendering(this, new DiscreteCoordinate(0,0), displayHeight, displayHeight);
-        robot.initPathFinder(new DiscreteCoordinate(field.getRows()-1, field.getCols()-1));
-        robot.placeSelfInGrid();
-        robot.generatePath();
-        robot.colorPath(new RGB(255, 255, 0));
+        size(1000,700);
+        field.initRendering(this, new DiscreteCoordinate(0,0), height , height);
+//        robot.initPathFinder(new DiscreteCoordinate(field.getRows()-1, field.getCols()-1));
+//        robot.placeSelfInGrid();
+//        robot.generatePath();
+//        robot.colorPath(new RGB(255, 255, 0));
     }
 
     public void setup()
