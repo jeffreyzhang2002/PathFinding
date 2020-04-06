@@ -77,8 +77,8 @@ public abstract class Grid<E>
     { return this; }
 
     /**
-     * returns true or false depending on if this Grid contains any objects
-     * @return true if there is no objects contained inside this Grid
+     * returns true or false depending on if this Grid contains any geometricObjects
+     * @return true if there is no geometricObjects contained inside this Grid
      */
     public final boolean isEmpty()
     { return getAllObjects().isEmpty(); }
@@ -131,7 +131,7 @@ public abstract class Grid<E>
     }
 
     /**
-     * returns a list of all the neighboring coordinates that DO NOT contain any objects
+     * returns a list of all the neighboring coordinates that DO NOT contain any geometricObjects
      * @param position the position you wish to find the empty neighboring coordinates
      * @param containCorners if the corners should be included
      * @return a HashSet containing all empty neighboring coordinates
@@ -147,7 +147,7 @@ public abstract class Grid<E>
     }
 
     /**
-     * returns a Set of all the Neighbors to the the given position that contain objects
+     * returns a Set of all the Neighbors to the the given position that contain geometricObjects
      * @param position the given position
      * @param containCorners true of false if the corners should be considered
      * @return a Set of all occupied neighboringCoordinates
@@ -163,10 +163,10 @@ public abstract class Grid<E>
     }
 
     /**
-     * this method gets a Set of all the objects that are neighboring the the given position
+     * this method gets a Set of all the geometricObjects that are neighboring the the given position
      * @param position The position you wish to find neighboring actors of
      * @param containCorners true or false if corners should be included
-     * @return a set of all neighboring objects
+     * @return a set of all neighboring geometricObjects
      */
     public HashSet<E> getNeighboringObjects(DiscreteCoordinate position, boolean containCorners)
     {
@@ -180,7 +180,7 @@ public abstract class Grid<E>
 
     /**
      * gets a Set of all Object on the Grid
-     * @return a Set of all objects contained on the Grid
+     * @return a Set of all geometricObjects contained on the Grid
      */
     public HashSet<E> getAllObjects()
     {
@@ -236,7 +236,7 @@ public abstract class Grid<E>
     public abstract E set(DiscreteCoordinate position, E object);
 
     /**
-     * clears all objects of the grid
+     * clears all geometricObjects of the grid
      */
     public abstract void clear();
 

@@ -1,35 +1,33 @@
 package math.geometry.coordinates;
 
-public class Point<E extends Number> {
+public class Point<E extends Number>
+{
+
     private E x, y;
 
     /**
      * creates a DiscreteCoordinate at position x and y
-     *
      * @param x the x position of the coordinate
      * @param y the y position of the coordinate
      */
-    public Point(E x, E y) {
-        set(x, y);
-    }
+    public Point(E x, E y)
+    { set(x, y); }
 
     /**
      * set the value of x on the coordinate
      *
      * @param x
      */
-    public void setX(E x) {
-        this.x = x;
-    }
+    public void setX(E x)
+    { this.x = x; }
 
     /**
      * set the value of y on the coordinate
      *
      * @param y
      */
-    public void setY(E y) {
-        this.y = y;
-    }
+    public void setY(E y)
+    { this.y = y; }
 
     /**
      * set both x and y of the coordinate
@@ -37,7 +35,8 @@ public class Point<E extends Number> {
      * @param x
      * @param y
      */
-    public void set(E x, E y) {
+    public void set(E x, E y)
+    {
         this.x = x;
         this.y = y;
     }
@@ -47,18 +46,16 @@ public class Point<E extends Number> {
      *
      * @return the value of x
      */
-    public E getX() {
-        return x;
-    }
+    public E getX()
+    { return x; }
 
     /**
      * return the value of y in the coordinate
      *
      * @return the value of y
      */
-    public E getY() {
-        return y;
-    }
+    public E getY()
+    { return y; }
 
     /**
      * gets the distance between to coordinates;
