@@ -1,15 +1,16 @@
 package pathFinders.pathFindingTileStates;
 
-import math.geometry.coordinates.DiscreteCoordinate;
+
+import java.awt.*;
 
 public class DStarState implements Comparable<DStarState>
 {
-    private DiscreteCoordinate coordinate;
+    private Point coordinate;
     private double RHS = Double.POSITIVE_INFINITY;
     private double G = Double.POSITIVE_INFINITY;
     private double primaryKey;
 
-    public DStarState(DiscreteCoordinate coordinate)
+    public DStarState(Point coordinate)
     {
         this.coordinate = coordinate;
     }
@@ -23,7 +24,7 @@ public class DStarState implements Comparable<DStarState>
     public double getPrimaryKey()
     { return primaryKey; }
 
-    public DiscreteCoordinate getCoordinate()
+    public Point getCoordinate()
     {
         return coordinate;
     }

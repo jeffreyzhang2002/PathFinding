@@ -2,9 +2,8 @@ package pathFinders;
 
 import grid.BoundedGrid;
 import grid.Field;
-import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.pathFindingTileStates.AStarState;
-
+import java.awt.*;
 import java.util.*;
 
 public class AStar extends PathFinder
@@ -12,15 +11,15 @@ public class AStar extends PathFinder
     PriorityQueue<AStarState> openSet;
     HashSet<AStarState> closedSet;
     BoundedGrid<AStarState> scoreLibrary;
-    HashMap<DiscreteCoordinate, DiscreteCoordinate> cameFrom = new HashMap<>();
+    HashMap<Point, Point> cameFrom = new HashMap<>();
 
     public AStar(Field field)
     { super(field); }
 
-    public AStar(Field field, DiscreteCoordinate start, DiscreteCoordinate end)
+    public AStar(Field field, Point start, Point end)
     { super(field,start,end); }
 
-    public ArrayList<DiscreteCoordinate> genPath (boolean containCorners)
+    public ArrayList<Point> genPath (boolean containCorners)
     {
         openSet   = new PriorityQueue<>();
         closedSet = new HashSet<>();
@@ -29,7 +28,7 @@ public class AStar extends PathFinder
 
         for(int i=0; i<super.getField().getRows(); i++)
             for(int j=0; j<super.getField().getCols(); j++) {
-                DiscreteCoordinate currentCoordinate = new DiscreteCoordinate(i,j);
+                Point currentCoordinate = new Point(i,j);
                 scoreLibrary.set(currentCoordinate, new AStarState(currentCoordinate));
             }
 
@@ -46,9 +45,9 @@ public class AStar extends PathFinder
                 return reconstructPath(current.getCoordinate());
 
             closedSet.add(current);
-            HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(current.getCoordinate(), containCorners);
+            HashSet<Point> neighbors = super.getField().getEmptyNeighboringCoordinates(current.getCoordinate(), containCorners);
 
-            for(DiscreteCoordinate n : neighbors)
+            for(Point n : neighbors)
             {
                 if(closedSet.contains(n))
                     continue;
@@ -70,9 +69,9 @@ public class AStar extends PathFinder
         return null;
     }
 
-    private ArrayList<DiscreteCoordinate> reconstructPath(DiscreteCoordinate current)
+    private ArrayList<Point> reconstructPath(Point current)
     {
-        ArrayList<DiscreteCoordinate> path = new ArrayList<>();
+        ArrayList<Point> path = new ArrayList<>();
         path.add(current);
         while(cameFrom.containsKey(current))
         {
@@ -86,8 +85,6 @@ public class AStar extends PathFinder
     private double heuristicCost(AStarState state)
     { return heuristicCost(state.getCoordinate(), super.getEnd()); }
 
-    private double heuristicCost(DiscreteCoordinate a, DiscreteCoordinate b)
-    {
-        return a.distanceSquared(b);
-    }
+    private double heuristicCost(Point a, Point b)
+    { return Math.pow(a.getX()-b.getX(),2) + Math.pow(a.getY()-b.getY(),2); }
 }

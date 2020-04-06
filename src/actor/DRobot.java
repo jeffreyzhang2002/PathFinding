@@ -1,28 +1,26 @@
 package actor;
 
 import grid.Field;
-import math.geometry.coordinates.Coordinate;
-import math.geometry.coordinates.DiscreteCoordinate;
-import math.RGB;
 import pathFinders.DStarLite;
 import processing.core.PApplet;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class DRobot extends Actor
 {
     private DStarLite pathFinder;
-    private ArrayList<DiscreteCoordinate> path;
+    private ArrayList<Point> path;
     private boolean containCorners = true;
     private int index = 1;
 
-    public DRobot(Field grid, DiscreteCoordinate position, DStarLite pathFinder)
+    public DRobot(Field grid, Point position, DStarLite pathFinder)
     {
         super(grid, position);
         this.pathFinder = pathFinder;
     }
 
-    public void initPathFinder(DiscreteCoordinate end)
+    public void initPathFinder(Point end)
     {
         pathFinder.setStart(super.getPosition());
         pathFinder.setEnd(end);
@@ -31,13 +29,13 @@ public class DRobot extends Actor
     public boolean generatePath()
     {
         path = pathFinder.genPath(containCorners);
-        this.colorPath(path,new RGB(255,255,0));
+        this.colorPath(path, Color.GREEN);
         return path != null;
     }
 
-    public HashSet<DiscreteCoordinate> getNextCoordinates()
+    public HashSet<Point> getNextCoordinates()
     {
-        HashSet<DiscreteCoordinate> temp =  new HashSet<DiscreteCoordinate>();
+        HashSet<Point> temp =  new HashSet<Point>();
 
         if(path == null)
             return null;
@@ -52,36 +50,36 @@ public class DRobot extends Actor
         return temp;
     }
 
-    public DiscreteCoordinate chooseNextCoordinate(HashSet<DiscreteCoordinate> coordinateList)
+    public Point chooseNextCoordinate(HashSet<Point> coordinateList)
     {
         if(coordinateList == null || coordinateList.isEmpty())
             return super.getPosition();
 
-        DiscreteCoordinate current = (DiscreteCoordinate) coordinateList.toArray()[(int)(Math.random()*(coordinateList.size() - 1))];
+        Point current = (Point) coordinateList.toArray()[(int)(Math.random()*(coordinateList.size() - 1))];
 
         if(!current.equals(path.get(index)))
         {
-            this.colorPath(path, new RGB(255,255,255));
+            this.colorPath(path, new Color(255,255,255));
             path = pathFinder.replan(super.getPosition(),containCorners);
-            this.colorPath(path, new RGB(255,255,0));
+            this.colorPath(path, new Color(255,255,0));
             index = 0;
         }
         if(!super.getField().isEmptyPosition(current))
         {
-            this.colorPath(path, new RGB(255,255,255));
+            this.colorPath(path, new Color(255,255,255));
             path = pathFinder.replan(path.get(index-1),containCorners);
-            this.colorPath(path, new RGB(255,255,0));
+            this.colorPath(path, new Color(255,255,0));
             index = 0;
-            current = (DiscreteCoordinate) getNextCoordinates().toArray()[0];
+            current = (Point) getNextCoordinates().toArray()[0];
         }
         index++;
         return current;
     }
 
-    public void renderDraw(PApplet processing, Coordinate position, double width, double height)
+    public void renderDraw(PApplet processing, Point position, double width, double height)
     {
         processing.fill(255,0,0);
-        processing.rect(position.getX().floatValue(),position.getY().floatValue(), (float) width, (float) height);
+        processing.rect((float) position.getX(), (float)position.getY(), (float) width, (float) height);
     }
 
     public Actor droppedActor()
@@ -89,26 +87,14 @@ public class DRobot extends Actor
         return null;
     }
 
-    public ArrayList<DiscreteCoordinate> getPath()
+    public ArrayList<Point> getPath()
     {
         return path;
     }
 
-    public void renderSettings(PApplet processing)
+    public void colorPath(ArrayList<Point> path, Color color)
     {
-        processing.rectMode(PApplet.CORNER);
-    }
-
-    public void renderDraw(PApplet processing)
-    {
-        processing.fill(255,0,0);
-        processing.rect(super.getOrigin().getX().floatValue(), super.getOrigin().getY().floatValue(),
-                super.getWidth(),super.getHeight());
-    }
-
-    public void colorPath(ArrayList<DiscreteCoordinate> path, RGB color)
-    {
-        for(DiscreteCoordinate c: path)
+        for(Point c: path)
             super.getField().getTileColorTracker().set(c, color);
     }
 }

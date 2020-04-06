@@ -1,6 +1,6 @@
 package grid;
 
-import math.geometry.coordinates.DiscreteCoordinate;
+import java.awt.*;
 import java.util.HashSet;
 
 /**
@@ -45,8 +45,8 @@ public abstract class Grid<E>
      * @param position the given position you want to check
      * @return True if the position is on the Grid. False if not on the Grid
      */
-    public final boolean isValid(DiscreteCoordinate position)
-    { return isValid(position.getX(), position.getY()); }
+    public final boolean isValid(Point position)
+    { return isValid(position.x, position.y); }
 
     /**
      * overloaded method version of isValid see above for more detail
@@ -62,7 +62,7 @@ public abstract class Grid<E>
      * @param position the Position you wish to check
      * @return true if it is on the edge and false otherwise
      */
-    public final boolean isEdge(DiscreteCoordinate position)
+    public final boolean isEdge(Point position)
     {
         return isValid(position) &&
                 position.getX() == 0 || position.getX() == getRows() - 1
@@ -88,7 +88,7 @@ public abstract class Grid<E>
      * @param position the Position you wish to check
      * @return true if the given position is null on the Grid. False otherwise
      */
-    public final boolean isEmptyPosition(DiscreteCoordinate position)
+    public final boolean isEmptyPosition(Point position)
     { return get(position) == null; }
 
     /**
@@ -99,33 +99,33 @@ public abstract class Grid<E>
      * @param containCorners True if this method should return the corners false otherwise
      * @return a HashSet with all of the valid NeighboringCoordinates
      */
-    public final HashSet<DiscreteCoordinate> getNeighborCoordinates(DiscreteCoordinate position, boolean containCorners)
+    public final HashSet<Point> getNeighborCoordinates(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinates;
+        HashSet<Point> coordinates;
         if(containCorners)
             coordinates = new HashSet<>(8);
         else
             coordinates = new HashSet<>(4);
 
-        if(isValid(position.getX() + 1, position.getY()))
-            coordinates.add(new DiscreteCoordinate(position.getX() + 1, position.getY()));
-        if(isValid(position.getX() - 1, position.getY()))
-            coordinates.add(new DiscreteCoordinate(position.getX() - 1, position.getY()));
-        if(isValid(position.getX(), position.getY() + 1))
-            coordinates.add(new DiscreteCoordinate(position.getX(), position.getY() + 1));
-        if(isValid(position.getX(), position.getY() - 1))
-            coordinates.add(new DiscreteCoordinate(position.getX(), position.getY() - 1));
+        if(isValid(position.x + 1, position.y))
+            coordinates.add(new Point(position.x + 1, position.y));
+        if(isValid(position.x - 1, position.y))
+            coordinates.add(new Point(position.x - 1, position.y));
+        if(isValid(position.x, position.y + 1))
+            coordinates.add(new Point(position.x, position.y + 1));
+        if(isValid(position.x, position.y))
+            coordinates.add(new Point(position.x, position.y - 1));
 
         if(containCorners)
         {
-            if(isValid(position.getX() + 1, position.getY() + 1))
-                coordinates.add(new DiscreteCoordinate(position.getX() + 1, position.getY() + 1));
-            if(isValid(position.getX() + 1, position.getY() - 1))
-                coordinates.add(new DiscreteCoordinate(position.getX() + 1, position.getY() - 1));
-            if(isValid(position.getX() - 1, position.getY() + 1))
-                coordinates.add(new DiscreteCoordinate(position.getX() - 1, position.getY() + 1));
-            if(isValid(position.getX() - 1, position.getY() - 1))
-                coordinates.add(new DiscreteCoordinate(position.getX() - 1, position.getY() - 1));
+            if(isValid(position.x + 1, position.y + 1))
+                coordinates.add(new Point(position.x + 1, position.y + 1));
+            if(isValid(position.x + 1, position.y - 1))
+                coordinates.add(new Point(position.x + 1, position.y - 1));
+            if(isValid(position.x - 1, position.y + 1))
+                coordinates.add(new Point(position.x - 1, position.y + 1));
+            if(isValid(position.x - 1, position.y - 1))
+                coordinates.add(new Point(position.x - 1, position.y - 1));
         }
         return coordinates;
     }
@@ -136,11 +136,11 @@ public abstract class Grid<E>
      * @param containCorners if the corners should be included
      * @return a HashSet containing all empty neighboring coordinates
      */
-    public HashSet<DiscreteCoordinate> getEmptyNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<Point> getEmptyNeighboringCoordinates(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
-        HashSet<DiscreteCoordinate> returnList = new HashSet<DiscreteCoordinate>();
-        for(DiscreteCoordinate c : coordinateList)
+        HashSet<Point> coordinateList = getNeighborCoordinates(position,containCorners);
+        HashSet<Point> returnList = new HashSet<>();
+        for(Point c : coordinateList)
             if(isEmptyPosition(c))
                 returnList.add(c);
         return returnList;
@@ -152,11 +152,11 @@ public abstract class Grid<E>
      * @param containCorners true of false if the corners should be considered
      * @return a Set of all occupied neighboringCoordinates
      */
-    public HashSet<DiscreteCoordinate> getOccupiedNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<Point> getOccupiedNeighboringCoordinates(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinatelist = getNeighborCoordinates(position,containCorners);
-        HashSet<DiscreteCoordinate> returnList = new HashSet<DiscreteCoordinate>();
-        for(DiscreteCoordinate c : coordinatelist)
+        HashSet<Point> coordinatelist = getNeighborCoordinates(position,containCorners);
+        HashSet<Point> returnList = new HashSet<>();
+        for(Point c : coordinatelist)
             if(!isEmptyPosition(c))
                 returnList.add(c);
         return returnList;
@@ -168,12 +168,12 @@ public abstract class Grid<E>
      * @param containCorners true or false if corners should be included
      * @return a set of all neighboring geometricObjects
      */
-    public HashSet<E> getNeighboringObjects(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<E> getNeighboringObjects(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> neighboringCoordinate = getOccupiedNeighboringCoordinates(position,containCorners);
+        HashSet<Point> neighboringCoordinate = getOccupiedNeighboringCoordinates(position,containCorners);
         HashSet<E> actorList = new HashSet<>();
 
-        for(DiscreteCoordinate c: neighboringCoordinate)
+        for(Point c: neighboringCoordinate)
             actorList.add(this.get(c));
         return actorList;
     }
@@ -187,7 +187,7 @@ public abstract class Grid<E>
         HashSet<E> objectList = new HashSet<>();
         for(int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                DiscreteCoordinate temp = new DiscreteCoordinate(i,j);
+                Point temp = new Point(i,j);
                 if(!isEmptyPosition(temp))
                     objectList.add(get(temp));
             }
@@ -199,12 +199,12 @@ public abstract class Grid<E>
      * gets a list of all the Coordinates that contain and Object
      * @return list of all coordinates that have Objects
      */
-    public HashSet<DiscreteCoordinate> getOccupiedCoordinates()
+    public HashSet<Point> getOccupiedCoordinates()
     {
-        HashSet<DiscreteCoordinate> coordinates = new HashSet<>();
+        HashSet<Point> coordinates = new HashSet<>();
         for(int i = 0; i < getRows(); i++) {
             for (int j = 0; j < getCols(); j++) {
-                DiscreteCoordinate temp = new DiscreteCoordinate(i,j);
+                Point temp = new Point(i,j);
                 if(!isEmptyPosition(temp))
                     coordinates.add(temp);
             }
@@ -217,7 +217,7 @@ public abstract class Grid<E>
      * @param position the position that you with to remove
      * @return the Object that was originally at the position
      */
-    public E remove(DiscreteCoordinate position)
+    public E remove(Point position)
     { return set(position, null); }
 
     /**
@@ -225,7 +225,7 @@ public abstract class Grid<E>
      * @param position the position that is contained inside the Grid. This method can return null if nothing is at the given position
      * @return the Object at the given position. Null is a valid output
      */
-    public abstract E get(DiscreteCoordinate position);
+    public abstract E get(Point position);
 
     /**
      * Set the given position to contain the given object
@@ -233,7 +233,7 @@ public abstract class Grid<E>
      * @param object The object that the position should be set to
      * @return the Object that was originally at the position
      */
-    public abstract E set(DiscreteCoordinate position, E object);
+    public abstract E set(Point position, E object);
 
     /**
      * clears all geometricObjects of the grid
@@ -246,7 +246,7 @@ public abstract class Grid<E>
         for(int i = 0; i < rows; i++)
         {
             for(int j = 0; j < cols; j++)
-                s += this.get(new DiscreteCoordinate(i,j)).toString() + " ";
+                s += this.get(new Point(i,j)).toString() + " ";
             s += "\n";
         }
         return s;

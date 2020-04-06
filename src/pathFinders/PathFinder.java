@@ -1,7 +1,8 @@
 package pathFinders;
 
 import grid.Field;
-import math.geometry.coordinates.DiscreteCoordinate;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -10,9 +11,9 @@ import java.util.Collections;
  */
 public abstract class PathFinder
 {
-    private DiscreteCoordinate start, end;
+    private Point start, end;
     private Field field;
-    private ArrayList<DiscreteCoordinate> path;
+    private ArrayList<Point> path;
 
     /**
      * Constructor for creating pathFinder by using only a field
@@ -27,7 +28,7 @@ public abstract class PathFinder
      * @param start
      * @param end
      */
-    public PathFinder(Field field, DiscreteCoordinate start, DiscreteCoordinate end)
+    public PathFinder(Field field, Point start, Point end)
     {
         this.field = field;
         this.start = start;
@@ -40,8 +41,8 @@ public abstract class PathFinder
      */
     public PathFinder(PathFinder other)
     {
-        this.start = new DiscreteCoordinate(other.getStart());
-        this.end = new DiscreteCoordinate(other.getEnd());
+        this.start = new Point(other.getStart());
+        this.end = new Point(other.getEnd());
         this.field = other.getField();
     }
 
@@ -50,7 +51,7 @@ public abstract class PathFinder
      * @param containCorners chooses if corner are included in the neighbors
      * @return the Path that is generated. Null if path does not exist or it fails
      */
-    public abstract ArrayList<DiscreteCoordinate> genPath(boolean containCorners);
+    public abstract ArrayList<Point> genPath(boolean containCorners);
 
     /**
      * This method generates the path and return true or false depending on if the path is generated or not
@@ -69,11 +70,11 @@ public abstract class PathFinder
      * @param containCorners chooses if corners are included in the neighbors
      * @return the new path generates
      */
-    public ArrayList<DiscreteCoordinate> replan(DiscreteCoordinate currentPosition, boolean containCorners)
+    public ArrayList<Point> replan(Point currentPosition, boolean containCorners)
     {
-        DiscreteCoordinate placeHolder = start;
+        Point placeHolder = start;
         this.setStart(currentPosition);
-        ArrayList<DiscreteCoordinate> newPath = genPath(containCorners);
+        ArrayList<Point> newPath = genPath(containCorners);
         this.setStart(start);
         return newPath;
     }
@@ -84,9 +85,9 @@ public abstract class PathFinder
      * @param containCorners chooses if corners are included in the neighbors
      * @return true or false
      */
-    public final boolean dynamicReplan(DiscreteCoordinate currentPosition, boolean containCorners)
+    public final boolean dynamicReplan(Point currentPosition, boolean containCorners)
     {
-        ArrayList<DiscreteCoordinate> newPath = replan(currentPosition, containCorners);
+        ArrayList<Point> newPath = replan(currentPosition, containCorners);
         if(newPath == null)
             return false;
         int index = path.indexOf(currentPosition);
@@ -98,28 +99,28 @@ public abstract class PathFinder
      * Sets the start of the pathfinder
      * @param start the start position
      */
-    public final void setStart(DiscreteCoordinate start)
+    public final void setStart(Point start)
     { this.start = start; }
 
     /**
      * Sets the end of the pathfinder
      * @param end the end position
      */
-    public final void setEnd(DiscreteCoordinate end)
+    public final void setEnd(Point end)
     { this.end = end; }
 
     /**
      * returns the start of the pathfinder
      * @return the start position
      */
-    public final DiscreteCoordinate getStart()
+    public final Point getStart()
     { return start; }
 
     /**
      * returns the end of the pathfinder
      * @return the end of the position
      */
-    public final DiscreteCoordinate getEnd()
+    public final Point getEnd()
     { return end; }
 
     /**
@@ -133,7 +134,7 @@ public abstract class PathFinder
      * returns the path the pathfinder generated
      * @return the path that was created
      */
-    public final ArrayList<DiscreteCoordinate> getPath()
+    public final ArrayList<Point> getPath()
     { return path; }
 
     /**
@@ -141,9 +142,9 @@ public abstract class PathFinder
      * @param index the index it will be merged at
      * @param otherPath another path
      */
-    private final void mergePath(int index, ArrayList<DiscreteCoordinate> otherPath)
+    private final void mergePath(int index, ArrayList<Point> otherPath)
     {
-        ArrayList<DiscreteCoordinate> newPath = new ArrayList<>();
+        ArrayList<Point> newPath = new ArrayList<>();
         for(int i=0; i<index; i++)
             newPath.add(path.get(i));
         newPath.addAll(otherPath);

@@ -1,9 +1,7 @@
 package actor;
 
 import grid.Field;
-import math.geometry.coordinates.DiscreteCoordinate;
-import processing.core.PApplet;
-import render.Renderable;
+import java.awt.*;
 import java.util.HashSet;
 
 /**
@@ -11,10 +9,10 @@ import java.util.HashSet;
  * The following methods must be overridden getNextCoordinates() and chooseNextCoordinates()
  * The following methods may be overridden renderSettings(), renderDraw(), step() and droppedActor()
  */
-public abstract class Actor extends Renderable
+public abstract class Actor
 {
     private Field field;
-    private DiscreteCoordinate position;
+    private Point position;
 
     /**
      * Creates an abstract actor using a given field and the position it is current at.
@@ -22,7 +20,7 @@ public abstract class Actor extends Renderable
      * @param grid The Grid the actor will be placed inside of
      * @param position The position the actor will be at
      */
-    public Actor(Field grid, DiscreteCoordinate position)
+    public Actor(Field grid, Point position)
     {
         this.field = grid;
         if(!field.isValid(position))
@@ -34,7 +32,7 @@ public abstract class Actor extends Renderable
      * Sets the position the actor will be at
      * @param position the position the actor will be moved to
      */
-    public final void setPosition(DiscreteCoordinate position)
+    public final void setPosition(Point position)
     {
         if(!field.isValid(position))
             throw new IllegalArgumentException("given position is not on field");
@@ -45,7 +43,7 @@ public abstract class Actor extends Renderable
      * gets the Position the actor currently is
      * @return the Current position
      */
-    public final DiscreteCoordinate getPosition()
+    public final Point getPosition()
     { return position; }
 
     /**
@@ -71,9 +69,9 @@ public abstract class Actor extends Renderable
      * Moves the actor to the next designated position
      * @return
      */
-    public DiscreteCoordinate step()
+    public Point step()
     {
-        DiscreteCoordinate next = chooseNextCoordinate(getNextCoordinates());
+        Point next = chooseNextCoordinate(getNextCoordinates());
         Actor leftBehind = droppedActor();
 
         if (field.isValid(next))
@@ -94,9 +92,9 @@ public abstract class Actor extends Renderable
      * Currently this return a Set containing the current position
      * @return a HashSet
      */
-    public HashSet<DiscreteCoordinate> getNextCoordinates()
+    public HashSet<Point> getNextCoordinates()
     {
-        HashSet<DiscreteCoordinate> coordinateList = new HashSet<>();
+        HashSet<Point> coordinateList = new HashSet<>();
         coordinateList.add(position);
         return coordinateList;
     }
@@ -107,7 +105,7 @@ public abstract class Actor extends Renderable
      * @param coordinateList a HashSet of possible coordinate this actor can go to
      * @return the next posistion
      */
-    public DiscreteCoordinate chooseNextCoordinate(HashSet<DiscreteCoordinate> coordinateList)
+    public Point chooseNextCoordinate(HashSet<Point> coordinateList)
     { return position; }
 
     /**
@@ -117,18 +115,6 @@ public abstract class Actor extends Renderable
      */
     public Actor droppedActor()
     { return null; }
-
-    /**
-     * The rendering settings for the current actor. This method can be overridden
-     * @param processing the Rendering Engine
-     */
-    public abstract void renderSettings(PApplet processing);
-
-    /**
-     * What is drawn when render is called. This method should be overridden
-     * @param processing the Rendering Engine
-     */
-    public abstract void renderDraw(PApplet processing);
 
     public String toString()
     { return position.toString(); }

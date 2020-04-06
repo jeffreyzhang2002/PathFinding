@@ -40,7 +40,7 @@ public class GUI
         mainFrame.setSize(fieldDimension + consoleWidth + buttonBarWidth,
                 menuBar.getHeight() + fieldDimension + statusBar.getHeight() + mainFrame.getInsets().top + 50);
 
-        DrawField field = new DrawField(new Field(10,10),new Point(0,0),fieldDimension, consoleWidth);
+        JDisplay field = new JDisplay(new Field(10,10),new Point(0,0),fieldDimension, consoleWidth);
 
         mainFrame.getContentPane().add(BorderLayout.NORTH, menuBar);
         mainFrame.getContentPane().add(BorderLayout.CENTER, field);

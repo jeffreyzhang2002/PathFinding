@@ -1,14 +1,10 @@
 package gui;
 
 import grid.Field;
-import math.RGB;
-import math.geometry.coordinates.DiscreteCoordinate;
-
 import java.awt.*;
-import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 
-public class DrawField extends JPanel
+public class JDisplay extends JPanel
 {
     private static final long serialVersionUID = 1L;
 
@@ -16,10 +12,7 @@ public class DrawField extends JPanel
     private Field field;
     private Point origin;
 
-    private boolean renderTiles = true;
-    private boolean renderActors = true;
-
-    public DrawField(Field field, Point origin, int fieldWidth, int consoleWidth)
+    public JDisplay(Field field, Point origin, int fieldWidth, int consoleWidth)
     {
         super.setSize(new Dimension(fieldWidth + consoleWidth, fieldWidth));
         if(field.getRows() != field.getCols())
@@ -34,31 +27,28 @@ public class DrawField extends JPanel
     public void paint(Graphics g)
     {
         background(g);
-        actors(g);
-
-
-
+        tiles(g);
     }
 
-    public void actors(Graphics g)
+    public void tiles(Graphics g)
     {
-        for (int i = 0; i < field.getRows(); i++)
-            for (int j = 0; j < field.getCols(); j++)
-            {
+        for (int i = 0; i < field.getRows(); i++) {
+            for (int j = 0; j < field.getCols(); j++) {
                 g.setColor(Color.black);
 
                 g.drawRect((origin.x + i * tileWidth),
-                        (origin.y + j * tileWidth),  tileWidth, tileWidth);
+                        (origin.y + j * tileWidth), tileWidth, tileWidth);
 
-                RGB color = field.getTileColorTracker().get(new DiscreteCoordinate(i, j));
+                Color color = field.getTileColorTracker().get(new Point(i, j));
                 if (color == null)
                     g.setColor(Color.white);
                 else
-                    g.setColor(new Color(color.getR(), color.getG(), color.getB()));
+                    g.setColor(color);
 
                 g.fillRect((origin.x + i * tileWidth + 1),
-                        (origin.y + j * tileWidth + 1),  tileWidth - 1, tileWidth -1 );
+                        (origin.y + j * tileWidth + 1), tileWidth - 1, tileWidth - 1);
             }
+        }
     }
 
     public void background(Graphics g)

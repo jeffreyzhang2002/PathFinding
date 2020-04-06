@@ -1,15 +1,14 @@
 package grid;
 
 import actor.Actor;
-import math.geometry.coordinates.DiscreteCoordinate;
-import math.RGB;
+import java.awt.*;
 
 /**
  * a Class that represent a 2D field in which actors can interact with its environment
  */
 public class Field extends BoundedGrid<Actor>
 {
-    private BoundedGrid<RGB> tileColorTracker;
+    private BoundedGrid<Color> tileColorTracker;
 
     /**
      * creates a instance of the Field
@@ -49,7 +48,7 @@ public class Field extends BoundedGrid<Actor>
      * @param actor The actor that will be placed in
      * @return The Actor that was originally at that position
      */
-    public Actor set(DiscreteCoordinate coordinate, Actor actor)
+    public Actor set(Point coordinate, Actor actor)
     {
         actor.setPosition(coordinate);
         return super.set(coordinate,actor);
@@ -67,7 +66,7 @@ public class Field extends BoundedGrid<Actor>
         boolean errors = false;
         for(int i = 0; i < super.getRows(); i++) {
             for (int j = 0; j < super.getCols(); j++) {
-                DiscreteCoordinate current = new DiscreteCoordinate(i, j);
+                Point current = new Point(i, j);
                 Actor actor = super.get(current);
                 if (actor.getPosition() != current) {
                     errors = true;
@@ -87,7 +86,7 @@ public class Field extends BoundedGrid<Actor>
      * gets the Grid that contains what the colors of each tile should be
      * @return
      */
-    public Grid<RGB> getTileColorTracker()
+    public Grid<Color> getTileColorTracker()
     { return tileColorTracker; }
 
     /**
@@ -95,7 +94,7 @@ public class Field extends BoundedGrid<Actor>
      * @param coordinate the ContinuousCoordinate that will have its color changed
      * @param color the Color it will be changed to
      */
-    public void setTileColor(DiscreteCoordinate coordinate, RGB color)
+    public void setTileColor(Point coordinate, Color color)
     { tileColorTracker.set(coordinate, color);}
 
     /**
@@ -103,6 +102,6 @@ public class Field extends BoundedGrid<Actor>
      * @param coordinate
      * @return
      */
-    public RGB getTileColor(DiscreteCoordinate coordinate)
+    public Color getTileColor(Point coordinate)
     { return tileColorTracker.get(coordinate); }
 }

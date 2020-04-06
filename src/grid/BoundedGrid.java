@@ -1,6 +1,6 @@
 package grid;
 
-import math.geometry.coordinates.DiscreteCoordinate;
+import java.awt.*;
 
 public class BoundedGrid<E> extends Grid<E>
 {
@@ -12,29 +12,29 @@ public class BoundedGrid<E> extends Grid<E>
         grid = new Object[rows][cols];
     }
 
-    public E get(DiscreteCoordinate coordinate)
+    public E get(Point coordinate)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
-        return (E) grid[coordinate.getX()][coordinate.getY()];
+        return (E) grid[coordinate.x][coordinate.y];
     }
 
-    public E set(DiscreteCoordinate coordinate, E obj)
+    public E set(Point coordinate, E obj)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
-        Object temp = grid[coordinate.getX()][coordinate.getY()];
-        grid[coordinate.getX()][coordinate.getY()] = obj;
+        Object temp = grid[coordinate.x][coordinate.y];
+        grid[coordinate.x][coordinate.y] = obj;
         return (E) temp;
     }
 
     //TODO Why can't this be set(coordinates, null)? it throws an error for null pointer error. Remove this method because it is redundant
-    public E remove(DiscreteCoordinate coordinate)
+    public E remove(Point coordinate)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
-        Object temp = grid[coordinate.getX()][coordinate.getY()];
-        grid[coordinate.getX()][coordinate.getY()] = null;
+        Object temp = grid[coordinate.x][coordinate.y];
+        grid[coordinate.x][coordinate.y] = null;
         return (E) temp;
     }
 

@@ -1,14 +1,15 @@
 package pathFinders.pathFindingTileStates;
 
-import math.geometry.coordinates.DiscreteCoordinate;
+
+import java.awt.*;
 
 public class AStarState implements Comparable<AStarState>
 {
     private double gScore = Double.POSITIVE_INFINITY;
     private double fScore = Double.POSITIVE_INFINITY;
-    private DiscreteCoordinate coordinate;
+    private Point coordinate;
 
-    public AStarState(DiscreteCoordinate coordinate)
+    public AStarState(Point coordinate)
     { this.coordinate = coordinate; }
 
     public void setGScore(double gScore)
@@ -23,7 +24,7 @@ public class AStarState implements Comparable<AStarState>
     public double getFScore()
     { return fScore; }
 
-    public DiscreteCoordinate getCoordinate()
+    public Point getCoordinate()
     { return coordinate; }
 
     public int compareTo(AStarState other)

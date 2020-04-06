@@ -1,6 +1,6 @@
 package grid;
 
-import math.geometry.coordinates.DiscreteCoordinate;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 
 public class ListedGrid<E> extends Grid<E>
 {
-    HashMap<DiscreteCoordinate, E> gridList;
+    HashMap<Point, E> gridList;
     public ListedGrid(int rows, int cols)
     {
         super(rows, cols);
-        gridList = new HashMap<DiscreteCoordinate, E>(rows*cols/2);
+        gridList = new HashMap<Point, E>(rows*cols/2);
     }
 
-    public E get(DiscreteCoordinate coordinate)
+    public E get(Point coordinate)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
         return gridList.get(coordinate);
     }
 
-    public E set(DiscreteCoordinate coordinate, E obj)
+    public E set(Point coordinate, E obj)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
@@ -30,23 +30,23 @@ public class ListedGrid<E> extends Grid<E>
 
     }
 
-    public E remove(DiscreteCoordinate coordinate)
+    public E remove(Point coordinate)
     {
         if(!isValid(coordinate))
             throw new IllegalArgumentException("ContinuousCoordinate " + coordinate + "is not on the grid");
         return gridList.remove(coordinate);
     }
 
-    public HashSet<DiscreteCoordinate> getOccupiedCoordinates()
-    { return (HashSet<DiscreteCoordinate>) gridList.keySet(); }
+    public HashSet<Point> getOccupiedCoordinates()
+    { return (HashSet<Point>) gridList.keySet(); }
 
     public HashSet<E> getAllObjects()
     { return new HashSet<>(gridList.values()); }
 
-    public HashSet<E> getNeighboringObjects(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<E> getNeighboringObjects(Point position, boolean containCorners)
     {
         HashSet<E> neighboringObjects = new HashSet<E>();
-        for(DiscreteCoordinate c : gridList.keySet())
+        for(Point c : gridList.keySet())
         {
             if(c.getX() == position.getX() && Math.abs(c.getY()- position.getY()) == 1
                     || c.getY() == position.getY() && Math.abs(c.getX()- position.getX()) == 1)
@@ -57,16 +57,16 @@ public class ListedGrid<E> extends Grid<E>
         return neighboringObjects;
     }
 
-    public HashSet<DiscreteCoordinate> getEmptyNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<Point> getEmptyNeighboringCoordinates(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
-        return (HashSet<DiscreteCoordinate>) coordinateList.stream().filter(n -> !gridList.containsKey(n)).collect(Collectors.toSet());
+        HashSet<Point> coordinateList = getNeighborCoordinates(position,containCorners);
+        return (HashSet<Point>) coordinateList.stream().filter(n -> !gridList.containsKey(n)).collect(Collectors.toSet());
     }
 
-    public HashSet<DiscreteCoordinate> getOccupiedNeighboringCoordinates(DiscreteCoordinate position, boolean containCorners)
+    public HashSet<Point> getOccupiedNeighboringCoordinates(Point position, boolean containCorners)
     {
-        HashSet<DiscreteCoordinate> coordinateList = getNeighborCoordinates(position,containCorners);
-        return (HashSet<DiscreteCoordinate>) coordinateList.stream().filter(n -> gridList.containsKey(n)).collect(Collectors.toSet());
+        HashSet<Point> coordinateList = getNeighborCoordinates(position,containCorners);
+        return (HashSet<Point>) coordinateList.stream().filter(n -> gridList.containsKey(n)).collect(Collectors.toSet());
     }
 
     public void clear()

@@ -2,9 +2,8 @@ package pathFinders;
 
 import grid.BoundedGrid;
 import grid.Field;
-import math.geometry.coordinates.DiscreteCoordinate;
 import pathFinders.pathFindingTileStates.DStarState;
-
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.PriorityQueue;
@@ -22,17 +21,17 @@ public class DStarLite extends PathFinder
     public DStarLite(Field field)
     { super(field); }
 
-    public DStarLite(Field field, DiscreteCoordinate start, DiscreteCoordinate end)
+    public DStarLite(Field field, Point start, Point end)
     { super(field,start,end); }
 
-    public ArrayList<DiscreteCoordinate> genPath(boolean containCorners)
+    public ArrayList<Point> genPath(boolean containCorners)
     {
         init();
         computeShortestPath(containCorners);
         return rebuildPath(containCorners);
     }
 
-    public double heuristic(DiscreteCoordinate start, DiscreteCoordinate end)
+    public double heuristic(Point start, Point end)
     { return start.distance(end); }
 
     public double calculatePrimaryKey(DStarState currentState)
@@ -48,7 +47,7 @@ public class DStarLite extends PathFinder
         {
             for(int j=0; j < super.getField().getCols(); j++)
             {
-                DiscreteCoordinate currentCoordinate = new DiscreteCoordinate(i,j);
+                Point currentCoordinate = new Point(i,j);
                 openList.set(currentCoordinate, new DStarState(currentCoordinate));
             }
         }
@@ -63,8 +62,8 @@ public class DStarLite extends PathFinder
         if(!currentState.getCoordinate().equals(super.getEnd()))
         {
             double minSuccessorValue = Double.POSITIVE_INFINITY;
-            HashSet<DiscreteCoordinate> successors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
-            for(DiscreteCoordinate s : successors)
+            HashSet<Point> successors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+            for(Point s : successors)
             {
                 double successorValue = heuristic(currentState.getCoordinate(), s) + openList.get(s).getG();
                 if(successorValue < minSuccessorValue)
@@ -98,8 +97,8 @@ public class DStarLite extends PathFinder
             else if(currentState.getG() > currentState.getRHS())
             {
                 currentState.setG(currentState.getRHS());
-                HashSet<DiscreteCoordinate> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
-                for(DiscreteCoordinate c : predecessors)
+                HashSet<Point> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+                for(Point c : predecessors)
                 {
                    updateVertex(openList.get(c),containCorners);
                 }
@@ -107,8 +106,8 @@ public class DStarLite extends PathFinder
             else
             {
                 currentState.setG(Double.POSITIVE_INFINITY);
-                HashSet<DiscreteCoordinate> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
-                for(DiscreteCoordinate c : predecessors)
+                HashSet<Point> predecessors = super.getField().getEmptyNeighboringCoordinates(currentState.getCoordinate(), containCorners);
+                for(Point c : predecessors)
                 {
                     updateVertex(openList.get(c),containCorners);
                 }
@@ -117,17 +116,17 @@ public class DStarLite extends PathFinder
         }
     }
 
-    public ArrayList<DiscreteCoordinate> rebuildPath(boolean containCorners)
+    public ArrayList<Point> rebuildPath(boolean containCorners)
     {
-        ArrayList<DiscreteCoordinate> path = new ArrayList<>();
-        DiscreteCoordinate current = super.getStart();
+        ArrayList<Point> path = new ArrayList<>();
+        Point current = super.getStart();
         while(!current.equals(super.getEnd()))
         {
             path.add(current);
-            HashSet<DiscreteCoordinate> successor = super.getField().getNeighborCoordinates(current, containCorners);
+            HashSet<Point> successor = super.getField().getNeighborCoordinates(current, containCorners);
             double minSuccessorScore = Double.POSITIVE_INFINITY;
-            DiscreteCoordinate minSuccessor = null;
-            for (DiscreteCoordinate s : successor)
+            Point minSuccessor = null;
+            for (Point s : successor)
             {
                 double successorScore = openList.get(s).getG();
                 if (successorScore < minSuccessorScore) {
@@ -142,23 +141,23 @@ public class DStarLite extends PathFinder
         return path;
     }
 
-    public ArrayList<DiscreteCoordinate> replan(DiscreteCoordinate currentPos, boolean containCorners)
+    public ArrayList<Point> replan(Point currentPos, boolean containCorners)
     {
         km = km + heuristic(super.getEnd(), super.getStart());
-        HashSet<DiscreteCoordinate> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
+        HashSet<Point> blockedNeighbors = super.getField().getOccupiedNeighboringCoordinates(currentPos, containCorners);
 
-        for(DiscreteCoordinate b : blockedNeighbors)
+        for(Point b : blockedNeighbors)
         {
             DStarState blockedState = openList.get(b);
             blockedState.setG(Double.POSITIVE_INFINITY);
             blockedState.setRHS(Double.POSITIVE_INFINITY);
-            HashSet<DiscreteCoordinate> neighbors = super.getField().getEmptyNeighboringCoordinates(b,containCorners);
-            for(DiscreteCoordinate c : neighbors)
+            HashSet<Point> neighbors = super.getField().getEmptyNeighboringCoordinates(b,containCorners);
+            for(Point c : neighbors)
                 updateVertex(openList.get(c),containCorners);
         }
         computeShortestPath(containCorners);
         super.setStart(currentPos);
-        ArrayList<DiscreteCoordinate> tmp = rebuildPath(containCorners);
+        ArrayList<Point> tmp = rebuildPath(containCorners);
         return tmp;
     }
 
@@ -168,9 +167,8 @@ public class DStarLite extends PathFinder
         for(int i=0; i<super.getField().getRows(); i++)
         {
             for(int j=0; j<super.getField().getCols(); j++)
-            {
-                s += openList.get(new DiscreteCoordinate(i,j)) + " ";
-            }
+                s += openList.get(new Point(i,j)) + " ";
+
             s += "\n";
         }
         System.out.println(s);
