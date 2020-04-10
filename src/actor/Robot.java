@@ -101,4 +101,10 @@ public class Robot extends Actor
             for(Point current : pathFinder.getPath())
                 super.getField().setTileColor(current, color);
     }
+
+    public void paint(Graphics g, Point origin, int width)
+    {
+        g.setColor(Color.GREEN);
+        g.fillRect(origin.x,origin.y,width,width);
+    }
 }

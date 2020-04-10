@@ -12,6 +12,12 @@ public class Barrier extends Actor
     public Barrier(Field grid, Point position)
     { super(grid, position); }
 
+    public void paint(Graphics g, Point origin, int width)
+    {
+        g.setColor(Color.black);
+        g.fillRect(origin.x,origin.y,width,width);
+    }
+
     /**
      * This method returns the current position because a Barrier is unable to move
      * @return the current position

@@ -1,6 +1,8 @@
 package actor;
 
 import grid.Field;
+import gui.Renderable;
+
 import java.awt.*;
 import java.util.HashSet;
 
@@ -9,7 +11,7 @@ import java.util.HashSet;
  * The following methods must be overridden getNextCoordinates() and chooseNextCoordinates()
  * The following methods may be overridden renderSettings(), renderDraw(), step() and droppedActor()
  */
-public abstract class Actor
+public abstract class Actor implements Renderable
 {
     private Field field;
     private Point position;
@@ -107,6 +109,8 @@ public abstract class Actor
      */
     public Point chooseNextCoordinate(HashSet<Point> coordinateList)
     { return position; }
+
+    public abstract void paint(Graphics g, Point origin, int width);
 
     /**
      * This method returns what will be left behind when an actor moves. This method can be overridden. Currently it

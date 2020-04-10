@@ -1,90 +1,55 @@
 package gui;
 
+import actor.Barrier;
 import grid.Field;
-
+import gui.colorChooser.ColorChooser;
+import gui.displays.*;
+import javax.swing.*;
 import java.awt.*;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
+import java.awt.event.*;
 
-public class GUI
+public class GUI extends JFrame
 {
-    public static JFrame mainFrame = new JFrame("GUI");
-    public static JMenuBar menuBar = new JMenuBar();
-    public static JPanel buttonBar = new JPanel();
-    public static JPanel statusBar = new JPanel();
+    public MainDisplay mainContent;
+    public FieldDisplay fieldContent;
+    public ConsoleDisplay consoleContent;
+    public ButtonDisplay buttonContent;
+    public ColorButtonDisplay colorContent;
+    public MenuDisplay menuBar;
+    public StatusDisplay statusBar;
+    public JLabel mousePosLabel;
 
-    public static final int fieldDimension = 650;
-    public static final int consoleWidth = 300;
-    public static final int StatusBarHeight = 20;
-    public static final int buttonBarWidth = 100;
+    private Field field = new Field(10, 10);
+
+    public GUI() {
+        super.setLayout(new BorderLayout());
+        super.addMouseMotionListener(new MainMouseHandler());
+
+        menuBar = new MenuDisplay(this);
+        statusBar = new StatusDisplay(this);
+
+        mousePosLabel = new JLabel("Mouse: ");
+        statusBar.addLabel(mousePosLabel);
+
+        fieldContent = new FieldDisplay(field, this);
+        consoleContent = new ConsoleDisplay(this);
+        mainContent = new MainDisplay(new Dimension(1000, 700), this, fieldContent, consoleContent);
+        buttonContent = new ButtonDisplay(this);
 
 
-    public static void main(String[] args)
-    {
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setResizable(false);
 
-        initMenuBar();
-        initButtonBar();
-        initStatusBar();
-
-
-        mainFrame.setSize(fieldDimension + consoleWidth + buttonBarWidth,
-                menuBar.getHeight() + fieldDimension + statusBar.getHeight() + mainFrame.getInsets().top + 50);
-
-        JDisplay field = new JDisplay(new Field(10,10),new Point(0,0),fieldDimension, consoleWidth);
-
-        mainFrame.getContentPane().add(BorderLayout.NORTH, menuBar);
-        mainFrame.getContentPane().add(BorderLayout.CENTER, field);
-        mainFrame.getContentPane().add(BorderLayout.EAST, buttonBar);
-        mainFrame.getContentPane().add(BorderLayout.SOUTH, statusBar);
-
-        System.out.println(mainFrame.getWidth() + " height: " + mainFrame.getHeight());
-
-        mainFrame.setVisible(true);
+        super.getContentPane().add(mainContent, BorderLayout.CENTER);
+        super.getContentPane().add(menuBar, BorderLayout.NORTH);
+        super.getContentPane().add(buttonContent, BorderLayout.EAST);
+        super.getContentPane().add(statusBar, BorderLayout.SOUTH);
     }
 
-    public static void initMenuBar()
+    private class MainMouseHandler implements MouseMotionListener
     {
-        JMenu menu1 = new JMenu("File");
-        JMenu menu2 = new JMenu("Edit");
-        JMenu menu3 = new JMenu("Run");
+        public void mouseMoved(MouseEvent e)
+        { mousePosLabel.setText(String.format("Mouse: ( %d, %d )", e.getX(), e.getY())); }
 
-        menuBar.add(menu1);
-        menuBar.add(menu2);
-        menuBar.add(menu3);
-
-        JMenuItem menu1A = new JMenuItem("Open");
-        JMenuItem menu1B = new JMenuItem("Save");
-
-        menu1.add(menu1A);
-        menu1.add(menu1B);
-    }
-
-    public static void initStatusBar()
-    {
-        statusBar.setBorder(new BevelBorder(BevelBorder.LOWERED));
-        statusBar.setSize(fieldDimension + consoleWidth + buttonBarWidth, StatusBarHeight);
-        statusBar.setLayout(new BoxLayout(statusBar, BoxLayout.X_AXIS));
-
-        JLabel statusLabel = new JLabel("status");
-        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-
-        statusBar.add(statusLabel);
-    }
-
-    public static void initButtonBar()
-    {
-        buttonBar.setSize(buttonBarWidth,fieldDimension);
-        buttonBar.setLayout(new FlowLayout());
-        buttonBar.add(new JButton("press me"));
+        public void mouseDragged(MouseEvent e)
+        { }
     }
 }

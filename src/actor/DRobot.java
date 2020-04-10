@@ -97,4 +97,10 @@ public class DRobot extends Actor
         for(Point c: path)
             super.getField().getTileColorTracker().set(c, color);
     }
+
+    public void paint(Graphics g, Point origin, int width)
+    {
+        g.setColor(Color.GREEN);
+        g.fillRect(origin.x,origin.y,width,width);
+    }
 }

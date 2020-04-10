@@ -82,6 +82,23 @@ public class Field extends BoundedGrid<Actor>
         return errors;
     }
 
+    public Field changeSize(int rows, int cols)
+    {
+        Field newField = new Field(rows, cols);
+        int minCols = Math.min(super.getRows(), rows);
+        int minRows = Math.min(super.getCols(), cols);
+        for(int i=0; i<minCols; i++)
+        {
+            for(int j=0; j<minRows; j++)
+            {
+                Point currentPoint = new Point(i,j);
+                newField.set(currentPoint, super.get(currentPoint));
+                newField.setTileColor(currentPoint, getTileColor(currentPoint));
+            }
+        }
+        return newField;
+    }
+
     /**
      * gets the Grid that contains what the colors of each tile should be
      * @return
