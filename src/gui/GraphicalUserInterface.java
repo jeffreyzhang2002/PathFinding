@@ -1,9 +1,6 @@
 package gui;
 
 import gui.colorChooser.ColorChooser;
-import gui.displays.ConsoleDisplay;
-import gui.displays.FieldDisplay;
-import gui.displays.MainDisplay;
 import gui.statusBar.StatusBar;
 
 import javax.swing.*;
@@ -18,16 +15,11 @@ public class GraphicalUserInterface extends JFrame
     {
         super.setLayout(new BorderLayout());
         super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         statusBar = new StatusBar();
         super.getContentPane().add(BorderLayout.SOUTH, statusBar);
+
         initColorChooser();
-
-        while(super.isActive())
-        {
-            if(colorChooser.isActive())
-                colorChooser.updateAll();
-
-        }
     }
 
     public void initColorChooser()
@@ -35,5 +27,16 @@ public class GraphicalUserInterface extends JFrame
         colorChooser = new ColorChooser();
         colorChooser.setVisible(true);
         colorChooser.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+    }
+
+    public void constantUpdate()
+    {
+        while(super.isVisible())
+        {
+            if(colorChooser.isVisible())
+                colorChooser.updateAll();
+
+
+        }
     }
 }

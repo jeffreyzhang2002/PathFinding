@@ -35,14 +35,14 @@ public class ColorChooser extends JFrame
     public void updateAll()
     {
         chosenColorDisplay.setBackground(colorChooserPanel.getChosenColor());
-        chosenColorDisplay.updateUI();
 
         if(!customColorCreator.getCurrentCustomColor().equals(lastCustomColor))
         {
-            lastCustomColor = customColorCreator.getCurrentCustomColor();;
+            lastCustomColor = customColorCreator.getCurrentCustomColor();
             colorChooserPanel.addColor(lastCustomColor);
             colorChooserPanel.pushNewButtons();
         }
+        chosenColorDisplay.updateUI();
     }
 
     public Color getChosenColor()
